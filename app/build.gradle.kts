@@ -34,6 +34,7 @@ android {
     }
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
@@ -46,6 +47,8 @@ kotlin {
 dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 
     // UI layer libraries
     implementation(libs.material)

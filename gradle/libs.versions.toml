@@ -11,6 +11,7 @@ targetSdk = "33"
 appcompat = "1.7.1"
 constraintlayout = "2.2.1"
 coreKtx = "1.18.0"
+navigationFragmentKtx = "2.9.8"
 
 # Testing
 espressoCore = "3.5.1"
@@ -27,6 +28,8 @@ detektTwitterComposeRules = "0.0.26"
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 
 # UI
 material = { module = "com.google.android.material:material", version.ref = "material" }
