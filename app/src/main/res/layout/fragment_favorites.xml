@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.root.FavoritesFragment">
+    tools:context=".ui.FavoritesFragment">
 
     <TextView
         android:layout_width="match_parent"
