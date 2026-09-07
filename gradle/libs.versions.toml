@@ -17,6 +17,7 @@ gson = "2.14.0"
 retrofit = "3.0.0"
 compiler = "5.0.9"
 kotlinxCoroutinesAndroid = "1.11.0"
+navigationFragmentKtx = "2.9.8"
 
 # Testing
 espressoCore = "3.5.1"
@@ -42,6 +43,8 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 
 # UI
 material = { module = "com.google.android.material:material", version.ref = "material" }
