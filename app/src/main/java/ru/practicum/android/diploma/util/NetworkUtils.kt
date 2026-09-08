@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
-
 fun Context.isNetworkAvailable(): Boolean {
     val connectivityManager = getSystemService(
         Context.CONNECTIVITY_SERVICE
@@ -14,12 +13,9 @@ fun Context.isNetworkAvailable(): Boolean {
         connectivityManager.activeNetwork
     )
 
-    if (capabilities != null) {
-        when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-        }
-    }
-    return false
+    return capabilities != null && (
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        )
 }
