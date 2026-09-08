@@ -22,17 +22,15 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        style="@style/BottomNavigationStyle"
         android:layout_width="0dp"
         android:layout_height="57dp"
         android:background="@drawable/bottom_navigation_background"
-        android:minHeight="57dp"
 
-        app:itemActiveIndicatorStyle="@null"
         app:itemIconTint="@color/nav_item_color"
-        app:itemPaddingBottom="0dp"
 
         app:itemPaddingTop="9dp"
+        app:activeIndicatorLabelPadding="0dp"
+        app:elevation="0dp"
 
         app:itemTextAppearanceActive="@style/NavItemTextStyle"
         app:itemTextAppearanceActiveBoldEnabled="false"
