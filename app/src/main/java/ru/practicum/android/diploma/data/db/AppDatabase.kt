@@ -11,7 +11,8 @@ import ru.practicum.android.diploma.data.db.entity.IndustryEntity
 import ru.practicum.android.diploma.data.db.entity.VacancyEntity
 import ru.practicum.android.diploma.data.db.entity.VacancyListEntity
 
-@Database(version = 1,
+@Database(
+    version = 1,
     entities = [AreaEntity::class,
         IndustryEntity::class,
         VacancyEntity::class,

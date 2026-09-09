@@ -19,11 +19,11 @@ class RetrofitNetworkClient(
         if (dto !is VacancySearchRequest) {
             return Response().apply { resultCode = 400 }
         }
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
                 val resp = searchApi.search(dto.expression)
                 resp.apply { resultCode = 200 }
-            } catch (e: Throwable){
+            } catch (e: Throwable) {
                 Response().apply { resultCode = 500 }
             }
         }
