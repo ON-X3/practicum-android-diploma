@@ -4,7 +4,7 @@ import ru.practicum.android.diploma.data.db.entity.VacancyEntity
 import ru.practicum.android.diploma.data.dto.VacancyDTO
 
 class VacancyConverter {
-    fun toEntity(vacancy: VacancyDTO): VacancyEntity{
+    fun toEntity(vacancy: VacancyDTO): VacancyEntity {
         return VacancyEntity(
             id = vacancy.id,
             name = vacancy.name,
@@ -19,7 +19,7 @@ class VacancyConverter {
             area = vacancy.area,
             employer = vacancy.employer,
             industry = vacancy.industry,
-            skills =  vacancy.skills
+            skills = vacancy.skills
         )
     }
 }

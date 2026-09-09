@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 class RetrofitNetworkClient(
     private val searchApi: SearchApi,
     private val context: Context
-): NetworkClient {
+) : NetworkClient {
     override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
