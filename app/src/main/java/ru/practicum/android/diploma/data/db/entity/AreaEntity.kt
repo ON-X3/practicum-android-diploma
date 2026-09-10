@@ -8,5 +8,6 @@ data class AreaEntity(
     @PrimaryKey
     val id: String,
     val parentId: String?,
-    val name: String
+    val name: String,
+    val areas: String?
 )

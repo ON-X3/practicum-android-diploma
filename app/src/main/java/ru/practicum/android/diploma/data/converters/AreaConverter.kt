@@ -8,7 +8,8 @@ class AreaConverter {
         return AreaEntity(
             id = area.id,
             parentId = area.parentId,
-            name = area.name
+            name = area.name,
+            areas = area.areas
         )
     }
 }
