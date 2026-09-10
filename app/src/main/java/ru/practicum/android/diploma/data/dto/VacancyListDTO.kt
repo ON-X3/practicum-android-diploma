@@ -14,9 +14,9 @@ data class VacancyItemDto(
     @SerializedName("name")
     val name: String,
     @SerializedName("company")
-    val company: String,
+    val company: String?,
     @SerializedName("city")
-    val city: String,
+    val city: String?,
     @SerializedName("salary")
     val salary: SalaryDto?,
     @SerializedName("logo")

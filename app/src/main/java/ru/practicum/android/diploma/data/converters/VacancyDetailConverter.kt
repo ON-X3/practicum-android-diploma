@@ -1,11 +1,11 @@
 package ru.practicum.android.diploma.data.converters
 
-import ru.practicum.android.diploma.data.db.entity.VacancyEntity
-import ru.practicum.android.diploma.data.dto.VacancyDTO
+import ru.practicum.android.diploma.data.db.entity.VacancyDetailEntity
+import ru.practicum.android.diploma.data.dto.VacancyDetailDTO
 
-class VacancyConverter {
-    fun toEntity(vacancy: VacancyDTO): VacancyEntity {
-        return VacancyEntity(
+class VacancyDetailConverter {
+    fun toEntity(vacancy: VacancyDetailDTO): VacancyDetailEntity {
+        return VacancyDetailEntity(
             id = vacancy.id,
             name = vacancy.name,
             description = vacancy.description,

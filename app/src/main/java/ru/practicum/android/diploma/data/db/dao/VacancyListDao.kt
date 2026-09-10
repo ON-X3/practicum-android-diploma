@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.data.db.entity.VacancyListEntity
 @Dao
 interface VacancyListDao {
     @Insert(entity = VacancyListEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(vacancies: List<VacancyListEntity>)
+    suspend fun insertAll(vacancies: VacancyListEntity)
 
     @Query("SELECT * FROM vacancy_list")
     suspend fun getAll(): List<VacancyListEntity>
