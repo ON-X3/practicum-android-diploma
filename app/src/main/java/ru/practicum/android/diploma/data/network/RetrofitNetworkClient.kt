@@ -21,8 +21,8 @@ class RetrofitNetworkClient(
             val resp = searchApi.search(dto.expression)
                 resp.apply { resultCode = 200 }
             } catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
-            }
+            Response().apply { resultCode = 500 }
+        }
     }
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
