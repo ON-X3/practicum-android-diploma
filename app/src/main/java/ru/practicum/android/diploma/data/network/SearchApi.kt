@@ -8,4 +8,3 @@ interface SearchApi {
     @GET("/vacancies?")
     suspend fun search(@Query("text") expression: String): VacancySearchResponse
 }
-
