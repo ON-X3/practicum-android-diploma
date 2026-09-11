@@ -5,5 +5,3 @@ data class VacancySalary(
     val to: Int?,
     val currency: String?
 )
-
-
