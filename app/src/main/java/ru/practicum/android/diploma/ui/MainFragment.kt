@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 
 // Rename parameter arguments, choose names that match
@@ -37,6 +39,17 @@ class MainFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        /* Кнопка для перехода на тестовый экран для проверки
+        работы HtmlFormatter. После ревью/при merge-конфликтах может быть удалена */
+        val button = view.findViewById<Button>(R.id.button)
+        button.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_testFragment)
+        }
     }
 
     companion object {
