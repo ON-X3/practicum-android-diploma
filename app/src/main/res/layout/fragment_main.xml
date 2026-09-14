@@ -24,6 +24,7 @@
             android:src="@drawable/ic_filter_off_24"
             />
     </com.google.android.material.appbar.MaterialToolbar>
+        android:layout_height="match_parent" />
 
     <FrameLayout
 

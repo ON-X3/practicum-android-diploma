@@ -12,4 +12,15 @@
     <dimen name="margin16dp">16dp</dimen>
     <dimen name="margin20dp">20dp</dimen>
     <dimen name="margin156dp">156dp</dimen>
+    <dimen name="micro_padding">4dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
+    <dimen name="basic_padding">16dp</dimen>
+    <dimen name="large_padding">24dp</dimen>
+    <dimen name="huge_padding">32dp</dimen>
+    <dimen name="list_items_spacing">0dp</dimen>
+    <dimen name="list_item_not_first_line_margin">23dp</dimen>
+    <dimen name="html_h2_text_size">22sp</dimen>
+    <dimen name="html_h3_text_size">16sp</dimen>
+    <dimen name="html_p_text_size">16sp</dimen>
+    <dimen name="html_ul_text_size">16sp</dimen>
 </resources>
