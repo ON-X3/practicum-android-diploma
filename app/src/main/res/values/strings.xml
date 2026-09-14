@@ -4,4 +4,6 @@
     <string name="favorites">Избранное</string>
     <string name="team">Команда</string>
     <string name="list_item_marker">"   •   "</string>
+    <string name="devWorkers">Над приложением \nработали</string>
+    <string name="bestDevelopers">Иван Новиков \nЕрегин Вадим \nНиколай Ордин \nВиктор И. \nАлексей Акулов </string>
 </resources>
