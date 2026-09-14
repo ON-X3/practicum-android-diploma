@@ -1,7 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PracticumAndroidDiploma" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.PracticumAndroidDiploma" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:colorBackground">@color/ypWhite</item>
+        <item name="colorSurface">@color/ypWhite</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorOnSurfaceVariant">@color/gray</item>
+        <!-- Основной цвет текста на экране и карточках -->
+        <item name="colorOnBackground">@color/ypBlack</item>
+        <item name="colorOnSurface">@color/ypBlack</item>
+        <!-- цвета навбара и статусбара -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/ypWhite</item>
+        <item name="android:navigationBarColor">@color/ypWhite</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="Theme.PracticumAndroidDiploma" parent="Base.Theme.PracticumAndroidDiploma" />
 </resources>
