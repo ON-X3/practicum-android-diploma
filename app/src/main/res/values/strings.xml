@@ -9,4 +9,8 @@
     <string name="devWorkers">Над приложением \nработали</string>
     <string name="bestDevelopers">Иван Новиков \nЕрегин Вадим \nНиколай Ордин \nВиктор И. \nАлексей Акулов </string>
     <string name="no_salary_info">Зарплата не указана</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="nothing_found">Не удалось получить /nсписок вакансий</string>
+
 </resources>
