@@ -23,7 +23,7 @@ class RetrofitNetworkClient(
     }
 
     private suspend fun doVacanciesRequest(dto: VacancySearchRequest): Response {
-        try {
+        return try {
             val resp = searchApi.search(
                 expression = dto.expression,
                 page = dto.page,
@@ -32,9 +32,15 @@ class RetrofitNetworkClient(
                 salary = dto.salary,
                 onlyWithSalary = dto.onlyWithSalary,
             )
-            return resp.apply { resultCode = OK_CODE }
+            resp.apply { resultCode = OK_CODE }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
         } catch (e: HttpException) {
-            return Response().apply { resultCode = e.code() }
+            Response().apply { resultCode = e.code() }
+        } catch (e: java.io.IOException) {
+            Response().apply { resultCode = NO_CONNECTION_ERROR_CODE }
+        } catch (e: Throwable) {
+            Response().apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
@@ -61,6 +67,7 @@ class RetrofitNetworkClient(
         const val NO_CONNECTION_ERROR_CODE = -1
         const val BAD_REQUEST_ERROR_CODE = 400
         const val OK_CODE = 200
+        const val SERVER_ERROR_CODE = 500
     }
 
 }

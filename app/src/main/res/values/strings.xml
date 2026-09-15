@@ -7,4 +7,8 @@
     <string name="searchHint" translatable="false">Введите запрос</string>
     <string name="list_item_marker">"   •   "</string>
     <string name="no_salary_info">Зарплата не указана</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="nothing_found">Не удалось получить /nсписок вакансий</string>
+
 </resources>
