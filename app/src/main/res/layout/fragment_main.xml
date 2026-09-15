@@ -38,6 +38,7 @@
             android:minHeight="@dimen/height56dp"
             android:imeOptions="actionDone"
             android:singleLine="true"
+            android:textColor="@color/uniBlack"
             style="@style/searchDisplayText"
             />
 
