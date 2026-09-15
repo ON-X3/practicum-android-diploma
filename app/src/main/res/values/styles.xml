@@ -19,7 +19,7 @@
         <item name="iconTint">@color/black</item>
     </style>
 
-    <style name="searchDisplayText">
+    <style name="searchDisplayText" parent="Base.Theme.PracticumAndroidDiploma">
         <item name="android:layout_gravity">center</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
@@ -34,6 +34,7 @@
         <item name="android:singleLine">true</item>
 
         <item name="android:hint">@string/searchHint</item>
+        <item name="android:textColorHint">@color/text_hint_color</item>
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:drawableEnd">@drawable/ic_search_24</item>
