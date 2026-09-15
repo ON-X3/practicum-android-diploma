@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.domain.models.VacancyCard
 class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
     RecyclerView.Adapter<VacancyCardViewHolder>() {
 
-    var vacancies: MutableList<VacancyCard> = mutableListOf()
+    private val vacancies: MutableList<VacancyCard> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyCardViewHolder =
         VacancyCardViewHolder.from(parent)
@@ -22,4 +22,11 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
     fun interface VacancyCardClickListener {
         fun onVacancyCardClick(vacancyCard: VacancyCard)
     }
+
+    fun addVacancies(newVacancies: List<VacancyCard>) {
+        val oldSize = itemCount
+        vacancies.addAll(newVacancies)
+        notifyItemRangeInserted(oldSize, newVacancies.size)
+    }
+
 }
