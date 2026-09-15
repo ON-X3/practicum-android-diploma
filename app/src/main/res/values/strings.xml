@@ -7,4 +7,6 @@
     <string name="searchHint" translatable="false">Введите запрос</string>
     <string name="list_item_marker">"   •   "</string>
     <string name="no_salary_info">Зарплата не указана</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="required_experience">Требуемый опыт</string>
 </resources>
