@@ -42,7 +42,7 @@
         <item name="android:drawableTint">@color/uniBlack</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:inputType">text</item>
-
+    </style>
     <style name="ToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
