@@ -24,7 +24,14 @@ class RetrofitNetworkClient(
 
     private suspend fun doVacanciesRequest(dto: VacancySearchRequest): Response {
         try {
-            val resp = searchApi.search(dto.expression)
+            val resp = searchApi.search(
+                expression = dto.expression,
+                page = dto.page,
+                area = dto.area,
+                industry = dto.industry,
+                salary = dto.salary,
+                onlyWithSalary = dto.onlyWithSalary,
+            )
             return resp.apply { resultCode = OK_CODE }
         } catch (e: HttpException) {
             return Response().apply { resultCode = e.code() }
