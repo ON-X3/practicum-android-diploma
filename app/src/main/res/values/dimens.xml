@@ -25,4 +25,10 @@
     <dimen name="html_h3_text_size">16sp</dimen>
     <dimen name="html_p_text_size">16sp</dimen>
     <dimen name="html_ul_text_size">16sp</dimen>
+    <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="toolbar_text_padding_without_navigation">@dimen/basic_padding</dimen>
+    <dimen name="toolbar_text_padding_with_navigation">56dp</dimen>
+    <dimen name="company_logo_size">48dp</dimen>
+    <dimen name="company_logo_corner_radius">12dp</dimen>
+    <dimen name="company_logo_stoke_width">1dp</dimen>
 </resources>
