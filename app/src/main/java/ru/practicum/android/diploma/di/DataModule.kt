@@ -16,7 +16,6 @@ val dataModule = module {
         Retrofit.Builder()
             .baseUrl("https://android-diploma.education-services.ru/")
             .addConverterFactory(GsonConverterFactory.create())
-
             .build()
             .create(SearchApi::class.java)
     }
