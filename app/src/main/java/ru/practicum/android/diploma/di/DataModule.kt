@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.data.network.SearchApi
 
 val dataModule = module {
     single<NetworkClient> {
-        RetrofitNetworkClient(searchApi = get(),androidContext())
+        RetrofitNetworkClient(searchApi = get(), androidContext())
     }
     single<SearchApi> {
         Retrofit.Builder()

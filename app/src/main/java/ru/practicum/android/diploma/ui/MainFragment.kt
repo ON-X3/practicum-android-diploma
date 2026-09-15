@@ -66,7 +66,7 @@ class MainFragment : Fragment() {
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            //not used
+                // not used
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -77,7 +77,10 @@ class MainFragment : Fragment() {
                 else ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_24)
 
                 binding.searchInputText.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    null, null, searchIcon, null
+                    null,
+                    null,
+                    searchIcon,
+                    null
                 )
 
             }
@@ -91,9 +94,9 @@ class MainFragment : Fragment() {
         binding.searchInputText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE &&
                 binding.searchInputText.text.isNotEmpty()
-                ) {
-                    //to-do
-                }
+            ) {
+                // to-do
+            }
             false
         }
 
