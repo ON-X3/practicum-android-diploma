@@ -106,7 +106,7 @@ class MainFragment : Fragment() {
                 is SearchStateUi.Success -> showContent(it.vacancies, it.amountOfVacancies, it.hasNextPage)
                 is SearchStateUi.Empty -> showEmpty()
                 is SearchStateUi.NoMoreItems -> {}
-                is SearchStateUi.Error -> {} //Обработка ошибок из E1T4
+                is SearchStateUi.Error -> {} // Обработка ошибок из E1T4
             }
         }
 
@@ -143,8 +143,7 @@ class MainFragment : Fragment() {
         super.onDestroyView()
     }
 
-
-    //Для всех функций show... добавить изменение видимости вью,
+    // Для всех функций show... добавить изменение видимости вью,
     // отвечающих за обработку различных ошибок (после слияния с E1T4)
     private fun showDefaultState() {
         binding.apply {

@@ -32,7 +32,6 @@ class SearchViewModel(
     private val isFilterActive = MutableLiveData(false)
     fun observeIsFilterActive(): LiveData<Boolean> = isFilterActive
 
-
     fun updateFilter(filter: FilterParameters?) {
         currentPage = 1
         currentFilter = filter
@@ -79,7 +78,9 @@ class SearchViewModel(
                     return
                 }
                 vacanciesList.addAll(newItems)
-                searchStateUiLiveData.value = SearchStateUi.Success(vacanciesList, searchResult.data.found, maxPages > currentPage)
+                searchStateUiLiveData.value = SearchStateUi.Success(vacanciesList,
+                    searchResult.data.found,
+                    maxPages > currentPage)
                 isLoading = false
                 isNextPageLoading = false
             }
