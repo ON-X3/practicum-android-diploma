@@ -52,8 +52,11 @@ class MainFragment : Fragment() {
                 val hasText = !s.isNullOrEmpty()
                 binding.clearIcon.isVisible = hasText
 
-                val searchIcon = if (hasText) null
-                else ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_24)
+                val searchIcon = if (hasText) {
+                    null
+                } else {
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_24)
+                }
 
                 binding.searchInputText.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     null,
