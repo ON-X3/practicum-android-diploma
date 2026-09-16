@@ -26,8 +26,12 @@ class SearchViewModel(
     )
     private val searchStateUiLiveData = MutableLiveData<SearchStateUi>(SearchStateUi.Default)
     fun observeSearchStateUi(): LiveData<SearchStateUi> = searchStateUiLiveData
-    private val vacanciesListLiveData = MutableLiveData<List<VacancyCard>>(emptyList())
-    fun observeVacanciesList(): LiveData<List<VacancyCard>> = vacanciesListLiveData
+    private val vacanciesList = mutableListOf<VacancyCard>()
+
+    private val isFilterActive = MutableLiveData(false)
+    fun observeIsFilterActive(): LiveData<Boolean> = isFilterActive
+
+
     fun updateFilter(filter: FilterParameters?) {
         currentPage = 1
         currentFilter = filter
@@ -71,10 +75,9 @@ class SearchViewModel(
                     isLoading = false
                     return
                 }
-                val existingList = vacanciesListLiveData.value.orEmpty()
-                val updatedList = existingList + newItems
-                vacanciesListLiveData.value = updatedList
-                searchStateUiLiveData.value = SearchStateUi.Success
+                vacanciesList.clear()
+                vacanciesList.addAll(newItems)
+                searchStateUiLiveData.value = SearchStateUi.Success(vacanciesList, searchResult.data.found)
                 isLoading = false
             }
             is Resource.Error -> {
