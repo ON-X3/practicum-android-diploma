@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.util
+package ru.practicum.android.diploma.data.network
 
 import android.content.Context
 import android.net.ConnectivityManager

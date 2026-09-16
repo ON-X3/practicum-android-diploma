@@ -1,10 +1,10 @@
 package ru.practicum.android.diploma.data.converters
 
 import ru.practicum.android.diploma.data.db.entity.VacancyListEntity
-import ru.practicum.android.diploma.data.dto.VacancyListDTO
+import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
 class VacancyListConverter {
-    fun toEntity(vacancyList: VacancyListDTO): List<VacancyListEntity> {
+    fun toEntity(vacancyList: VacancySearchResponse): List<VacancyListEntity> {
         return vacancyList.items.map { item ->
             VacancyListEntity(
                 id = item.id,

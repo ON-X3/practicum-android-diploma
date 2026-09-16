@@ -4,4 +4,75 @@
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">12sp</item>
     </style>
+    <style name="CustomToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="titleTextAppearance">@style/CustomToolbarTitleTextAppearance</item>
+        <item name="navigationIconTint">@color/black</item>
+        <item name="tint">@color/black</item>
+    </style>
+
+    <style name="CustomToolbarTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text22Sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
+    <style name="searchDisplayText" parent="Base.Theme.PracticumAndroidDiploma">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:minHeight">@dimen/height56dp</item>
+
+    <style name="topBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/ypBlack</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">19dp</item>
+        <item name="android:paddingEnd">19dp</item>
+
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text16Sp</item>
+
+        <item name="android:background" type="drawable">@drawable/rounded_textview</item>
+        <item name="android:paddingHorizontal">@dimen/margin16dp</item>
+        <item name="android:singleLine">true</item>
+
+        <item name="android:hint">@string/searchHint</item>
+        <item name="android:textColorHint">@color/text_hint_color</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:drawableEnd">@drawable/ic_search_24</item>
+        <item name="android:drawablePadding">@dimen/margin32dp</item>
+        <item name="android:drawableTint">@color/uniBlack</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">text</item>
+    </style>
+    <style name="ToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
+        <item name="contentInsetStart">@dimen/toolbar_text_padding_without_navigation</item>
+        <item name="contentInsetStartWithNavigation">@dimen/toolbar_text_padding_with_navigation</item>
+        <item name="titleTextAppearance">@style/TextAppearanceMedium22</item>
+    </style>
+    
+    <style name="TextAppearanceMedium22" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearanceRegular16" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="logo_image">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/company_logo_corner_radius</item>
+    </style>
 </resources>
