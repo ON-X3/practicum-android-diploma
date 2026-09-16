@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
@@ -101,13 +103,39 @@ class MainFragment : Fragment() {
             when (it) {
                 is SearchStateUi.Default -> showDefaultState()
                 is SearchStateUi.Loading -> showLoadingState()
-                is SearchStateUi.Success -> showContent(it.vacancies, it.amountOfVacancies)
+                is SearchStateUi.Success -> showContent(it.vacancies, it.amountOfVacancies, it.hasNextPage)
                 is SearchStateUi.Empty -> showEmpty()
                 is SearchStateUi.NoMoreItems -> {}
                 is SearchStateUi.Error -> {} //Обработка ошибок из E1T4
             }
         }
+
+        binding.vacanciesList.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int
+                ) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (dy > 0) {
+                        val layoutManager =
+                            binding.vacanciesList.layoutManager as LinearLayoutManager
+
+                        val pos = layoutManager.findLastVisibleItemPosition()
+                        val itemsCount = adapter.itemCount
+
+                        if (pos >= itemsCount - 1) {
+                            viewModel.loadNextPage()
+                        }
+                    }
+                }
+            }
+        )
     }
+
     override fun onDestroyView() {
         binding.vacanciesList.adapter = null
         _adapter = null
@@ -126,6 +154,7 @@ class MainFragment : Fragment() {
             amountOfVacancies.isVisible = false
             vacanciesList.isVisible = false
         }
+        adapter.clear()
     }
 
     private fun showLoadingState() {
@@ -135,10 +164,11 @@ class MainFragment : Fragment() {
             amountOfVacancies.isVisible = false
             vacanciesList.isVisible = false
         }
+        adapter.clear()
     }
 
-    private fun showContent(vacancies: List<VacancyCard>, amount: Int) {
-        adapter.addVacancies(vacancies)
+    private fun showContent(vacancies: List<VacancyCard>, amount: Int, hasNextPage: Boolean) {
+        adapter.addVacancies(vacancies, hasNextPage)
         binding.apply {
             placeHolderImage.isVisible = false
             commonProgressBar.isVisible = false
@@ -156,6 +186,7 @@ class MainFragment : Fragment() {
             amountOfVacancies.isVisible = true
             vacanciesList.isVisible = false
         }
+        adapter.clear()
     }
 
     private fun onVacancyCardClick(vacancyCard: VacancyCard) {
