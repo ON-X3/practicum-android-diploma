@@ -6,5 +6,5 @@ import ru.practicum.android.diploma.domain.models.FilterParameters
 interface StorageClient {
     suspend fun saveFilterParameters(filter: FilterParameters)
     suspend fun clearFilterParameters()
-    fun getFilterParameters(): Flow<FilterParameters>
+    fun getFilterParameters(): Flow<FilterParameters?>
 }

@@ -4,7 +4,7 @@ data class FilterParameters(
     val area: FilterAreaDetails? = null,
     val industry: Industry? = null,
     val salary: Int? = null,
-    val onlyWithSalary: Boolean? = false
+    val onlyWithSalary: Boolean = false
 )
 
 data class FilterAreaDetails(
@@ -26,3 +26,10 @@ data class Industry(
     val industryId: Int,
     val industryName: String
 )
+
+fun FilterParameters.allNull(): Boolean {
+    return area == null
+        && industry == null
+        && salary == null
+        && !onlyWithSalary
+}
