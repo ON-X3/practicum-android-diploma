@@ -29,5 +29,5 @@ val dataModule = module {
     }
     single<NetworkClient> { RetrofitNetworkClient(get(), androidContext()) }
     single { VacancyDomainConverter() }
-    single<SearchRepository> { SearchRepositoryImpl(get(), get()) }
+    single<SearchRepository> { SearchRepositoryImpl(get(), get(),get()) }
 }
