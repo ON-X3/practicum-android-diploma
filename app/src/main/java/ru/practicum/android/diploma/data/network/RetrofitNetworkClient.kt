@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.Response
+import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 
 class RetrofitNetworkClient(
@@ -18,6 +19,7 @@ class RetrofitNetworkClient(
         }
         return when (dto) {
             is VacancySearchRequest -> doVacanciesRequest(dto)
+            is VacancyDetailsRequest -> doVacancyDetailsRequest(dto)
             else -> Response().apply { resultCode = BAD_REQUEST_ERROR_CODE }
         }
     }
@@ -32,6 +34,15 @@ class RetrofitNetworkClient(
                 salary = dto.salary,
                 onlyWithSalary = dto.onlyWithSalary,
             )
+            return resp.apply { resultCode = OK_CODE }
+        } catch (e: HttpException) {
+            return Response().apply { resultCode = e.code() }
+        }
+    }
+
+    private suspend fun doVacancyDetailsRequest(dto: VacancyDetailsRequest): Response {
+        try {
+            val resp = searchApi.getVacancyDetails(dto.id)
             return resp.apply { resultCode = OK_CODE }
         } catch (e: HttpException) {
             return Response().apply { resultCode = e.code() }

@@ -15,4 +15,4 @@ data class VacancyDetailDTO(
     val skills: String,
     val url: String,
     val industry: String
-)
+) : Response()

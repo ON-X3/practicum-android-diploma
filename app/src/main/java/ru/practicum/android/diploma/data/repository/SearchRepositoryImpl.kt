@@ -1,6 +1,8 @@
 package ru.practicum.android.diploma.data.repository
 
 import ru.practicum.android.diploma.data.converters.VacancyDomainConverter
+import ru.practicum.android.diploma.data.dto.VacancyDetailDTO
+import ru.practicum.android.diploma.data.dto.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
@@ -43,6 +45,13 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun getVacancyDetail(id: String): Resource<VacancyDetail> {
-        TODO("Not yet implemented")
+        val response = networkClient.doRequest(VacancyDetailsRequest(id))
+
+        return when (response.resultCode) {
+            OK_CODE -> Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR) //временая заглушка
+            NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
+            BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
+            else -> Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
 }
