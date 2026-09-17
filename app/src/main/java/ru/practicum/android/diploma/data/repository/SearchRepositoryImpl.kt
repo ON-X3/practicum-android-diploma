@@ -26,8 +26,8 @@ class SearchRepositoryImpl(
         val request = VacancySearchRequest(
             expression = expression,
             page = page,
-            area = filter?.area,
-            industry = filter?.industry,
+            area = filter?.area?.region?.regionId ?: filter?.area?.country?.countryId,
+            industry = filter?.industry?.industryId,
             salary = filter?.salary,
             onlyWithSalary = filter?.onlyWithSalary,
         )
