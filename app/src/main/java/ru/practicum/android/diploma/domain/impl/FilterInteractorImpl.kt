@@ -3,9 +3,12 @@ package ru.practicum.android.diploma.domain.impl
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.domain.api.FilterInteractor
 import ru.practicum.android.diploma.domain.api.FilterRepository
+import ru.practicum.android.diploma.domain.models.FilterArea
 import ru.practicum.android.diploma.domain.models.FilterAreaDetails
+import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.domain.util.Resource
 
 class FilterInteractorImpl(private val filterRepository: FilterRepository) : FilterInteractor {
     override suspend fun updateArea(area: FilterAreaDetails?) {
@@ -29,4 +32,8 @@ class FilterInteractorImpl(private val filterRepository: FilterRepository) : Fil
     }
 
     override fun getFilterParameters(): Flow<FilterParameters?> = filterRepository.getFilterParameters()
+
+    override suspend fun getFilterAreas(): Resource<List<FilterArea>> = filterRepository.getFilterAreas()
+
+    override suspend fun getFilterIndustries(): Resource<List<FilterIndustry>> = filterRepository.getFilterIndustries()
 }
