@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.data.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.dto.FilterAreasRequest
 import ru.practicum.android.diploma.data.dto.FilterAreasResponse
@@ -25,39 +26,38 @@ class FilterRepositoryImpl(private val storage: StorageClient, private val netwo
     FilterRepository {
     override suspend fun updateArea(area: FilterAreaDetails?) {
         withContext(Dispatchers.IO) {
-            storage.getFilterParameters().collect {
-                when {
-                    it == null && area == null -> {}
-                    it == null && area != null -> storage.saveFilterParameters(FilterParameters(area = area))
-                    it != null -> {
-                        val newParams = it.copy(area = area)
-                        if (newParams.allNull()) {
-                            storage.clearFilterParameters()
-                        } else {
-                            storage.saveFilterParameters(newParams)
-                        }
+            val currentFilter = storage.getFilterParameters().first()
+            when {
+                currentFilter == null && area == null -> {}
+                currentFilter == null && area != null -> storage.saveFilterParameters(FilterParameters(area = area))
+                currentFilter != null -> {
+                    val newParams = currentFilter.copy(area = area)
+                    if (newParams.allNull()) {
+                        storage.clearFilterParameters()
+                    } else {
+                        storage.saveFilterParameters(newParams)
                     }
                 }
             }
+
         }
     }
 
     override suspend fun updateIndustry(industry: Industry?) {
         withContext(Dispatchers.IO) {
-            storage.getFilterParameters().collect {
-                when {
-                    it == null && industry == null -> {}
-                    it == null && industry != null -> storage.saveFilterParameters(
-                        FilterParameters(industry = industry)
-                    )
+            val currentFilter = storage.getFilterParameters().first()
+            when {
+                currentFilter == null && industry == null -> {}
+                currentFilter == null && industry != null -> storage.saveFilterParameters(
+                    FilterParameters(industry = industry)
+                )
 
-                    it != null -> {
-                        val newParams = it.copy(industry = industry)
-                        if (newParams.allNull()) {
-                            storage.clearFilterParameters()
-                        } else {
-                            storage.saveFilterParameters(newParams)
-                        }
+                currentFilter != null -> {
+                    val newParams = currentFilter.copy(industry = industry)
+                    if (newParams.allNull()) {
+                        storage.clearFilterParameters()
+                    } else {
+                        storage.saveFilterParameters(newParams)
                     }
                 }
             }
@@ -66,17 +66,18 @@ class FilterRepositoryImpl(private val storage: StorageClient, private val netwo
 
     override suspend fun updateSalary(salary: Int?) {
         withContext(Dispatchers.IO) {
-            storage.getFilterParameters().collect {
-                when {
-                    it == null && salary == null -> {}
-                    it == null && salary != null -> storage.saveFilterParameters(FilterParameters(salary = salary))
-                    it != null -> {
-                        val newParams = it.copy(salary = salary)
-                        if (newParams.allNull()) {
-                            storage.clearFilterParameters()
-                        } else {
-                            storage.saveFilterParameters(newParams)
-                        }
+            val currentFilter = storage.getFilterParameters().first()
+            when {
+                currentFilter == null && salary == null -> {}
+                currentFilter == null && salary != null -> storage.saveFilterParameters(
+                    FilterParameters(salary = salary)
+                )
+                currentFilter != null -> {
+                    val newParams = currentFilter.copy(salary = salary)
+                    if (newParams.allNull()) {
+                        storage.clearFilterParameters()
+                    } else {
+                        storage.saveFilterParameters(newParams)
                     }
                 }
             }
@@ -85,20 +86,19 @@ class FilterRepositoryImpl(private val storage: StorageClient, private val netwo
 
     override suspend fun updateOnlyWithSalary(onlyWithSalary: Boolean) {
         withContext(Dispatchers.IO) {
-            storage.getFilterParameters().collect {
-                when {
-                    it == null && !onlyWithSalary -> {}
-                    it == null && onlyWithSalary -> storage.saveFilterParameters(
-                        FilterParameters(onlyWithSalary = true)
-                    )
+            val currentFilter = storage.getFilterParameters().first()
+            when {
+                currentFilter == null && !onlyWithSalary -> {}
+                currentFilter == null && onlyWithSalary -> storage.saveFilterParameters(
+                    FilterParameters(onlyWithSalary = true)
+                )
 
-                    it != null -> {
-                        val newParams = it.copy(onlyWithSalary = onlyWithSalary)
-                        if (newParams.allNull()) {
-                            storage.clearFilterParameters()
-                        } else {
-                            storage.saveFilterParameters(newParams)
-                        }
+                currentFilter != null -> {
+                    val newParams = currentFilter.copy(onlyWithSalary = onlyWithSalary)
+                    if (newParams.allNull()) {
+                        storage.clearFilterParameters()
+                    } else {
+                        storage.saveFilterParameters(newParams)
                     }
                 }
             }
