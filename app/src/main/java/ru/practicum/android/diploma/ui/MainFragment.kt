@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -105,6 +106,25 @@ class MainFragment : Fragment() {
 
         viewModel.observeSearchStateUi().observe(viewLifecycleOwner) {
             render(it)
+        }
+
+        viewModel.observeIsFilterActive().observe(viewLifecycleOwner) {
+            if (it) {
+                binding.addFilter.apply {
+                    imageTintList = ColorStateList.valueOf(requireContext().getColor(R.color.uniWhite))
+                    setBackgroundResource(R.drawable.active_filter_background)
+                }
+
+            } else {
+                binding.addFilter.apply {
+                    imageTintList = ColorStateList.valueOf(requireContext().getColor(R.color.ypBlack))
+                    background = null
+                }
+            }
+        }
+
+        binding.addFilter.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_filtersFragment)
         }
 
         binding.vacanciesList.addOnScrollListener(
