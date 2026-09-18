@@ -186,6 +186,7 @@ class MainFragment : Fragment() {
             imageRes = R.drawable.ic_no_internet,
             textRes = R.string.no_internet
         )
+        adapter.clear()
     }
 
     private fun showServerError() {
@@ -194,6 +195,7 @@ class MainFragment : Fragment() {
             imageRes = R.drawable.ic_server_error,
             textRes = R.string.server_error
         )
+        adapter.clear()
     }
 
     private fun onVacancyCardClick(vacancyCard: VacancyCard) {
@@ -201,11 +203,6 @@ class MainFragment : Fragment() {
             R.id.action_mainFragment_to_vacancyFragment,
             VacancyFragment.createArgs(vacancyCard.id)
         )
-    }
-
-    companion object {
-        private const val SEARCH_KEY = "search_key"
-        private const val EMPTY_TEXT = ""
     }
 
     private fun render(state: SearchStateUi) {
@@ -240,5 +237,10 @@ class MainFragment : Fragment() {
         } else {
             binding.placeholderText.isVisible = false
         }
+    }
+
+    companion object {
+        private const val SEARCH_KEY = "search_key"
+        private const val EMPTY_TEXT = ""
     }
 }

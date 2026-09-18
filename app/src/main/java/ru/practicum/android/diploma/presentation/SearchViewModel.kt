@@ -43,6 +43,7 @@ class SearchViewModel(
 
     fun onSearchTextChanged(text: String) {
         if (currentExpression == text) return
+        vacanciesList.clear()
         currentExpression = text
         if (text.isBlank()) {
             debouncer.cancel()
