@@ -11,7 +11,7 @@ sealed class SearchStateUi {
         val amountOfVacancies: Int,
         val hasNextPage: Boolean
     ) : SearchStateUi()
-    object NextPageLoading: SearchStateUi()
+    object NextPageLoading : SearchStateUi()
     object Empty : SearchStateUi()
     object NoInternetError : SearchStateUi()
     object ServerError : SearchStateUi()
