@@ -24,10 +24,14 @@ class SearchViewModel(
         coroutineScope = viewModelScope,
         action = { expression -> searchVacancies(expression) }
     )
+    private val vacanciesList = mutableListOf<VacancyCard>()
+    private var isNextPageLoading: Boolean = false
     private val searchStateUiLiveData = MutableLiveData<SearchStateUi>(SearchStateUi.Default)
     fun observeSearchStateUi(): LiveData<SearchStateUi> = searchStateUiLiveData
-    private val vacanciesListLiveData = MutableLiveData<List<VacancyCard>>(emptyList())
-    fun observeVacanciesList(): LiveData<List<VacancyCard>> = vacanciesListLiveData
+
+    private val isFilterActive = MutableLiveData(false)
+    fun observeIsFilterActive(): LiveData<Boolean> = isFilterActive
+
     fun updateFilter(filter: FilterParameters?) {
         currentPage = 1
         currentFilter = filter
@@ -47,19 +51,21 @@ class SearchViewModel(
     }
     fun loadNextPage() {
         if (!isLoading && currentPage < maxPages) {
+            isNextPageLoading = true
             currentPage++
             viewModelScope.launch {
                 searchVacancies(currentExpression)
             }
-        } else {
-            searchStateUiLiveData.value = SearchStateUi.NoMoreItems
         }
     }
     suspend fun searchVacancies(expression: String) {
         isLoading = true
-        searchStateUiLiveData.value = SearchStateUi.Loading
+        if (!isNextPageLoading) {
+            searchStateUiLiveData.value = SearchStateUi.Loading
+        }
         when (val searchResult = searchInteractor.searchVacancies(expression, currentFilter, currentPage)) {
             is Resource.Success -> {
+                currentPage = searchResult.data?.currentPage ?: 1
                 maxPages = searchResult.data?.pages ?: 1
                 val newItems = searchResult.data?.vacancies
                 if (newItems.isNullOrEmpty()) {
@@ -71,15 +77,17 @@ class SearchViewModel(
                     isLoading = false
                     return
                 }
-                val existingList = vacanciesListLiveData.value.orEmpty()
-                val updatedList = existingList + newItems
-                vacanciesListLiveData.value = updatedList
-                searchStateUiLiveData.value = SearchStateUi.Success
+                vacanciesList.addAll(newItems)
+                searchStateUiLiveData.value = SearchStateUi.Success(vacanciesList,
+                    searchResult.data.found,
+                    maxPages > currentPage)
                 isLoading = false
+                isNextPageLoading = false
             }
             is Resource.Error -> {
                 searchStateUiLiveData.value = SearchStateUi.Error(searchResult.errorCode)
                 isLoading = false
+                isNextPageLoading = false
             }
         }
     }
