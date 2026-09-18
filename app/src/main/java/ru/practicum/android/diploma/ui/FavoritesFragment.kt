@@ -43,8 +43,8 @@ class FavoritesFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun addVacanciesToList(vacancies: List<VacancyCard>) {
-        adapter.addVacancies(vacancies)
+    private fun addVacanciesToList(vacancies: List<VacancyCard>, hasNextPage: Boolean) {
+        adapter.addVacancies(vacancies, hasNextPage)
     }
 
     private fun onVacancyCardClick(vacancyCard: VacancyCard) {
