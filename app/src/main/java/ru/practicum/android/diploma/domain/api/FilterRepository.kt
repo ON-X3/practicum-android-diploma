@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.util.Resource
 
-interface FilterInteractor {
+interface FilterRepository {
 
     suspend fun updateArea(area: FilterAreaDetails?)
     suspend fun updateIndustry(industry: Industry?)

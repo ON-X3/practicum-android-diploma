@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -11,8 +13,13 @@ import ru.practicum.android.diploma.data.network.AuthInterceptor
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.data.network.SearchApi
+import ru.practicum.android.diploma.data.repository.FilterRepositoryImpl
 import ru.practicum.android.diploma.data.repository.SearchRepositoryImpl
+import ru.practicum.android.diploma.data.storage.SharedPreferences
+import ru.practicum.android.diploma.data.storage.StorageClient
+import ru.practicum.android.diploma.domain.api.FilterRepository
 import ru.practicum.android.diploma.domain.api.SearchRepository
+import ru.practicum.android.diploma.domain.models.FilterParameters
 
 val dataModule = module {
     single<SearchApi> {
@@ -30,4 +37,13 @@ val dataModule = module {
     single<NetworkClient> { RetrofitNetworkClient(get(), androidContext()) }
     single { VacancyDomainConverter() }
     single<SearchRepository> { SearchRepositoryImpl(get(), get()) }
+    single<StorageClient> {
+        SharedPreferences(
+            get(),
+            get(),
+            object : TypeToken<FilterParameters>() {}.type
+        )
+    }
+    factory { Gson() }
+    single<FilterRepository> { FilterRepositoryImpl(get(), get()) }
 }

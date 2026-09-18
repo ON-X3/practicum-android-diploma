@@ -9,7 +9,7 @@ class AreaConverter {
             id = area.id,
             parentId = area.parentId,
             name = area.name,
-            areas = area.areas
+            areas = area.areas.toString()
         )
     }
 }
