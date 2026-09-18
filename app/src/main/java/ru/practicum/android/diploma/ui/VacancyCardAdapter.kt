@@ -36,12 +36,12 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
 
     fun onNextPageLoadingError() {
         isLoadingVisible = false
-        notifyDataSetChanged()
+        notifyItemChanged(vacancies.lastIndex)
     }
 
     fun onNextPageLoading() {
         isLoadingVisible = true
-        notifyDataSetChanged()
+        notifyItemChanged(vacancies.lastIndex)
     }
 
     fun clear() {
