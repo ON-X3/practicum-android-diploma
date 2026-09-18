@@ -10,16 +10,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
 import ru.practicum.android.diploma.domain.models.VacancyCard
+import ru.practicum.android.diploma.domain.util.ErrorCode
 import ru.practicum.android.diploma.presentation.SearchStateUi
 import ru.practicum.android.diploma.presentation.SearchViewModel
 
@@ -114,12 +119,28 @@ class MainFragment : Fragment() {
                     imageTintList = ColorStateList.valueOf(requireContext().getColor(R.color.uniWhite))
                     setBackgroundResource(R.drawable.active_filter_background)
                 }
-
             } else {
                 binding.addFilter.apply {
                     imageTintList = ColorStateList.valueOf(requireContext().getColor(R.color.ypBlack))
                     background = null
                 }
+            }
+        }
+
+        viewModel.errorToast().observe(viewLifecycleOwner) {
+            adapter.onNextPageLoadingError()
+            if (it == ErrorCode.NO_INTERNET_CONNECTION) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.no_internet_toast_message,
+                    Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.error_toast_message,
+                    Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
@@ -226,12 +247,13 @@ class MainFragment : Fragment() {
     }
 
     private fun render(state: SearchStateUi) {
-        if (state !is SearchStateUi.Success) {
+        if (!(state is SearchStateUi.Success || state is SearchStateUi.NextPageLoading)) {
             binding.vacanciesList.scrollToPosition(0)
         }
         when (state) {
             is SearchStateUi.Default -> showDefaultState()
             is SearchStateUi.Loading -> showLoadingState()
+            is SearchStateUi.NextPageLoading -> adapter.onNextPageLoading()
             is SearchStateUi.Success -> showContent(
                 state.vacancies,
                 state.amountOfVacancies,

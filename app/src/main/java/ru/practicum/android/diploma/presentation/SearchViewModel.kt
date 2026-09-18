@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.SearchInteractor
 import ru.practicum.android.diploma.domain.models.FilterParameters
@@ -12,6 +13,7 @@ import ru.practicum.android.diploma.domain.models.VacancyCard
 import ru.practicum.android.diploma.domain.util.ErrorCode
 import ru.practicum.android.diploma.domain.util.Resource
 import ru.practicum.android.diploma.util.Debouncer
+import ru.practicum.android.diploma.util.SingleLiveEvent
 
 class SearchViewModel(
     val searchInteractor: SearchInteractor
@@ -20,18 +22,21 @@ class SearchViewModel(
     private var currentFilter: FilterParameters? = null
     private var currentPage: Int = 1
     private var maxPages: Int = 1
+    private var lastSuccessAmountOfVacancies: Int = 0
     private val debouncer = Debouncer<String>(
         delayMillis = SEARCH_DEBOUNCE_DELAY,
         coroutineScope = viewModelScope,
         action = { expression -> searchVacancies(expression) }
     )
     private val vacanciesList = mutableListOf<VacancyCard>()
-    private var isNextPageLoading: Boolean = false
     private val searchStateUiLiveData = MutableLiveData<SearchStateUi>(SearchStateUi.Default)
     fun observeSearchStateUi(): LiveData<SearchStateUi> = searchStateUiLiveData
 
     private val isFilterActive = MutableLiveData(false)
     fun observeIsFilterActive(): LiveData<Boolean> = isFilterActive
+
+    private val errorToastLiveData = SingleLiveEvent<ErrorCode>()
+    fun errorToast(): LiveData<ErrorCode> = errorToastLiveData
 
     fun updateFilter(filter: FilterParameters?) {
         currentPage = 1
@@ -55,8 +60,8 @@ class SearchViewModel(
     }
 
     fun loadNextPage() {
-        if (!isNextPageLoading && currentPage < maxPages) {
-            isNextPageLoading = true
+        if (searchStateUiLiveData.value !is SearchStateUi.NextPageLoading && currentPage < maxPages) {
+            searchStateUiLiveData.value = SearchStateUi.NextPageLoading
             currentPage++
             viewModelScope.launch {
                 searchVacancies(currentExpression)
@@ -72,7 +77,7 @@ class SearchViewModel(
     }
 
     suspend fun searchVacancies(expression: String) {
-        if (!isNextPageLoading) {
+        if (searchStateUiLiveData.value !is SearchStateUi.NextPageLoading) {
             searchStateUiLiveData.value = SearchStateUi.Loading
         }
         when (val searchResult = searchInteractor.searchVacancies(expression, currentFilter, currentPage)) {
@@ -83,6 +88,7 @@ class SearchViewModel(
     }
 
     fun processSuccess(searchResult: Resource.Success<VacanciesSearchResult>) {
+        lastSuccessAmountOfVacancies = searchResult.data?.found ?: 0
         currentPage = searchResult.data?.currentPage ?: 1
         maxPages = searchResult.data?.pages ?: 1
         val newItems = searchResult.data?.vacancies
@@ -98,14 +104,23 @@ class SearchViewModel(
             searchResult.data.found,
             maxPages > currentPage
         )
-
-        isNextPageLoading = false
     }
 
-    fun processError(searchResult: Resource.Error<VacanciesSearchResult>) {
+    suspend fun processError(searchResult: Resource.Error<VacanciesSearchResult>) {
         when (searchResult.errorCode) {
             ErrorCode.NO_INTERNET_CONNECTION -> {
-                searchStateUiLiveData.value = SearchStateUi.NoInternetError
+                if (currentPage == 1) {
+                    searchStateUiLiveData.value = SearchStateUi.NoInternetError
+                } else {
+                    currentPage--
+                    errorToastLiveData.value = ErrorCode.NO_INTERNET_CONNECTION
+                    delay(SEARCH_DEBOUNCE_DELAY)
+                    searchStateUiLiveData.value = SearchStateUi.Success(
+                        vacanciesList,
+                        lastSuccessAmountOfVacancies,
+                        maxPages > currentPage
+                    )
+                }
             }
 
             ErrorCode.NOT_FOUND -> {
@@ -113,7 +128,17 @@ class SearchViewModel(
             }
 
             else -> {
-                searchStateUiLiveData.value = SearchStateUi.ServerError
+                if (currentPage == 1) {
+                    searchStateUiLiveData.value = SearchStateUi.ServerError
+                } else {
+                    currentPage--
+                    errorToastLiveData.value = ErrorCode.INTERNAL_SERVER_ERROR
+                    searchStateUiLiveData.value = SearchStateUi.Success(
+                        vacanciesList,
+                        lastSuccessAmountOfVacancies,
+                        maxPages > currentPage
+                    )
+                }
             }
         }
     }

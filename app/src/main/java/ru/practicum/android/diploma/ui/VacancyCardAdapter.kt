@@ -8,13 +8,14 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
     RecyclerView.Adapter<VacancyCardViewHolder>() {
     private var hasNextPage: Boolean = false
     private val vacancies = mutableListOf<VacancyCard>()
+    private var isLoadingVisible: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyCardViewHolder =
         VacancyCardViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: VacancyCardViewHolder, position: Int) {
         holder.bind(vacancies[position])
-        holder.updateLoadingState(position == vacancies.lastIndex && hasNextPage)
+        holder.updateLoadingState(position == vacancies.lastIndex && hasNextPage && isLoadingVisible)
         holder.itemView.setOnClickListener {
             clickListener.onVacancyCardClick(vacancies[position])
         }
@@ -30,6 +31,16 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
         this.hasNextPage = hasNextPage
         vacancies.clear()
         vacancies.addAll(newVacancies)
+        notifyDataSetChanged()
+    }
+
+    fun onNextPageLoadingError() {
+        isLoadingVisible = false
+        notifyDataSetChanged()
+    }
+
+    fun onNextPageLoading() {
+        isLoadingVisible = true
         notifyDataSetChanged()
     }
 
