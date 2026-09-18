@@ -6,15 +6,18 @@ import ru.practicum.android.diploma.domain.models.VacancyCard
 
 class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
     RecyclerView.Adapter<VacancyCardViewHolder>() {
-
-    private val vacancies: MutableList<VacancyCard> = mutableListOf()
+    private var hasNextPage: Boolean = false
+    private val vacancies = mutableListOf<VacancyCard>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyCardViewHolder =
         VacancyCardViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: VacancyCardViewHolder, position: Int) {
         holder.bind(vacancies[position])
-        holder.itemView.setOnClickListener { clickListener.onVacancyCardClick(vacancies[position]) }
+        holder.updateLoadingState(position == vacancies.lastIndex && hasNextPage)
+        holder.itemView.setOnClickListener {
+            clickListener.onVacancyCardClick(vacancies[position])
+        }
     }
 
     override fun getItemCount() = vacancies.size
@@ -23,10 +26,15 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
         fun onVacancyCardClick(vacancyCard: VacancyCard)
     }
 
-    fun addVacancies(newVacancies: List<VacancyCard>) {
-        val oldSize = itemCount
+    fun addVacancies(newVacancies: List<VacancyCard>, hasNextPage: Boolean) {
+        this.hasNextPage = hasNextPage
+        vacancies.clear()
         vacancies.addAll(newVacancies)
-        notifyItemRangeInserted(oldSize, newVacancies.size)
+        notifyDataSetChanged()
     }
 
+    fun clear() {
+        hasNextPage = false
+        vacancies.clear()
+    }
 }

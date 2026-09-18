@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,50 +11,48 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/CustomToolbarStyle"
-        android:minHeight="@dimen/height64dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/height64dp"
         app:title="@string/search">
+
         <ImageView
             android:id="@+id/addFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
             android:layout_marginEnd="@dimen/margin20dp"
-            android:src="@drawable/ic_filter_off_24"
-            />
+            android:src="@drawable/ic_filter_off_24" />
     </com.google.android.material.appbar.MaterialToolbar>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/height48dp"
+        android:layout_marginHorizontal="@dimen/margin16dp"
         android:layout_marginVertical="@dimen/margin8dp"
-        android:layout_marginHorizontal="@dimen/margin16dp">
+        android:minHeight="@dimen/height48dp">
 
         <EditText
             android:id="@+id/searchInputText"
+            style="@style/searchDisplayText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/height56dp"
             android:imeOptions="actionDone"
+            android:minHeight="@dimen/height56dp"
             android:singleLine="true"
-            android:textColor="@color/uniBlack"
-            style="@style/searchDisplayText"
-            />
+            android:textColor="@color/uniBlack" />
 
         <ImageView
             android:id="@+id/clearIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="16dp"
             android:src="@drawable/ic_close_24"
             android:visibility="gone"
-            app:tint="@color/uniBlack"
-            />
+            app:tint="@color/uniBlack" />
 
     </FrameLayout>
-
     <LinearLayout
         android:id="@+id/placeholderLayout"
         android:layout_width="match_parent"
@@ -83,5 +81,50 @@
             android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>
+
+    <!--Вот это оборачивание в FrameLayout костыльно, уже как будто бы просится Constraint в корне.
+    Будет рефакторинг, когда наверстаем отставание по задачам -->
+    <FrameLayout
+        android:id="@+id/commonProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ProgressBar
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue"
+
+            />
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/amountOfVacancies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/rounded_textview"
+        android:backgroundTint="@color/blue"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="@dimen/micro_padding"
+        android:textAppearance="@style/TextAppearanceRegular16"
+        android:textColor="@color/uniWhite"
+        android:visibility="gone"
+        tools:text="Найдено 286 вакансий" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vacanciesList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/basic_padding"
+        android:layout_marginTop="@dimen/small_padding"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="2"
+        tools:listitem="@layout/vacancy_card_item" />
 
 </LinearLayout>
