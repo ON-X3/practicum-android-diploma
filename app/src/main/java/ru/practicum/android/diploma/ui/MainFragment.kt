@@ -72,7 +72,7 @@ class MainFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val hasText = !s.isNullOrEmpty()
                 binding.clearIcon.isVisible = hasText
-                viewModel.onSearchTextChanged(s.toString())
+                viewModel.onSearchTextChanged(s.toString().trim())
 
                 val searchIcon = if (hasText) {
                     null
