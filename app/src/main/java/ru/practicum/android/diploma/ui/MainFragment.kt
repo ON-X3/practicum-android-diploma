@@ -206,6 +206,9 @@ class MainFragment : Fragment() {
     }
 
     private fun render(state: SearchStateUi) {
+        if (state !is SearchStateUi.Success) {
+            binding.vacanciesList.scrollToPosition(0)
+        }
         when (state) {
             is SearchStateUi.Default -> showDefaultState()
             is SearchStateUi.Loading -> showLoadingState()
