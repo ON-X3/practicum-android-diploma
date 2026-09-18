@@ -33,14 +33,8 @@ class RetrofitNetworkClient(
                 onlyWithSalary = dto.onlyWithSalary,
             )
             resp.apply { resultCode = OK_CODE }
-        } catch (e: kotlinx.coroutines.CancellationException) {
-            throw e
         } catch (e: HttpException) {
             Response().apply { resultCode = e.code() }
-        } catch (e: java.io.IOException) {
-            Response().apply { resultCode = NO_CONNECTION_ERROR_CODE }
-        } catch (e: Throwable) {
-            Response().apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 

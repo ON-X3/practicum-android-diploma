@@ -53,34 +53,7 @@
             app:tint="@color/uniBlack" />
 
     </FrameLayout>
-    <LinearLayout
-        android:id="@+id/placeholderLayout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/margin16dp">
 
-        <ImageView
-            android:id="@+id/placeHolderImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/il_search"
-            android:contentDescription="@null" />
-
-        <TextView
-            android:id="@+id/placeholderText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:textSize="22sp"
-            android:textColor="@color/ypBlack"
-            android:fontFamily="@font/ys_display_medium"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </LinearLayout>
 
     <!--Вот это оборачивание в FrameLayout костыльно, уже как будто бы просится Constraint в корне.
     Будет рефакторинг, когда наверстаем отставание по задачам -->
@@ -126,5 +99,33 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
         tools:listitem="@layout/vacancy_card_item" />
+
+    <LinearLayout
+        android:id="@+id/placeholderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/margin16dp">
+
+        <ImageView
+            android:id="@+id/placeHolderImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/il_search"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/placeholderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/ypBlack"
+            android:visibility="gone"
+            android:textAppearance="@style/TextAppearanceMedium22"
+            tools:visibility="visible" />
+    </LinearLayout>
 
 </LinearLayout>

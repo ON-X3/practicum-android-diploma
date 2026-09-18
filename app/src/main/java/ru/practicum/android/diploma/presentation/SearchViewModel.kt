@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.SearchInteractor
 import ru.practicum.android.diploma.domain.models.FilterParameters
+import ru.practicum.android.diploma.domain.models.VacanciesSearchResult
 import ru.practicum.android.diploma.domain.models.VacancyCard
+import ru.practicum.android.diploma.domain.util.ErrorCode
 import ru.practicum.android.diploma.domain.util.Resource
 import ru.practicum.android.diploma.util.Debouncer
 
@@ -18,7 +20,6 @@ class SearchViewModel(
     private var currentFilter: FilterParameters? = null
     private var currentPage: Int = 1
     private var maxPages: Int = 1
-    private var isLoading = false
     private val debouncer = Debouncer<String>(
         delayMillis = SEARCH_DEBOUNCE_DELAY,
         coroutineScope = viewModelScope,
@@ -39,9 +40,11 @@ class SearchViewModel(
             searchVacancies(currentExpression)
         }
     }
+
     fun onSearchTextChanged(text: String) {
+        if (currentExpression == text) return
         currentExpression = text
-        if (text.isEmpty()) {
+        if (text.isBlank()) {
             debouncer.cancel()
             searchStateUiLiveData.value = SearchStateUi.Default
             return
@@ -49,8 +52,9 @@ class SearchViewModel(
         currentPage = 1
         debouncer.invoke(currentExpression)
     }
+
     fun loadNextPage() {
-        if (!isLoading && currentPage < maxPages) {
+        if (!isNextPageLoading && currentPage < maxPages) {
             isNextPageLoading = true
             currentPage++
             viewModelScope.launch {
@@ -58,39 +62,61 @@ class SearchViewModel(
             }
         }
     }
+
+    fun searchWithoutDebounce(expression: String) {
+        if (expression.isNotBlank()) {
+            debouncer.cancel()
+            viewModelScope.launch { searchVacancies(expression) }
+        }
+    }
+
     suspend fun searchVacancies(expression: String) {
-        isLoading = true
         if (!isNextPageLoading) {
             searchStateUiLiveData.value = SearchStateUi.Loading
         }
         when (val searchResult = searchInteractor.searchVacancies(expression, currentFilter, currentPage)) {
-            is Resource.Success -> {
-                currentPage = searchResult.data?.currentPage ?: 1
-                maxPages = searchResult.data?.pages ?: 1
-                val newItems = searchResult.data?.vacancies
-                if (newItems.isNullOrEmpty()) {
-                    if (currentPage == 1) {
-                        searchStateUiLiveData.value = SearchStateUi.Empty
-                    } else {
-                        searchStateUiLiveData.value = SearchStateUi.NoMoreItems
-                    }
-                    isLoading = false
-                    return
-                }
-                vacanciesList.addAll(newItems)
-                searchStateUiLiveData.value = SearchStateUi.Success(vacanciesList,
-                    searchResult.data.found,
-                    maxPages > currentPage)
-                isLoading = false
-                isNextPageLoading = false
+            is Resource.Success -> processSuccess(searchResult)
+
+            is Resource.Error -> processError(searchResult)
+        }
+    }
+
+    fun processSuccess(searchResult: Resource.Success<VacanciesSearchResult>) {
+        currentPage = searchResult.data?.currentPage ?: 1
+        maxPages = searchResult.data?.pages ?: 1
+        val newItems = searchResult.data?.vacancies
+        if (newItems.isNullOrEmpty()) {
+            if (currentPage == 1) {
+                searchStateUiLiveData.value = SearchStateUi.Empty
             }
-            is Resource.Error -> {
-                searchStateUiLiveData.value = SearchStateUi.Error(searchResult.errorCode)
-                isLoading = false
-                isNextPageLoading = false
+            return
+        }
+        vacanciesList.addAll(newItems)
+        searchStateUiLiveData.value = SearchStateUi.Success(
+            vacanciesList,
+            searchResult.data.found,
+            maxPages > currentPage
+        )
+
+        isNextPageLoading = false
+    }
+
+    fun processError(searchResult: Resource.Error<VacanciesSearchResult>) {
+        when (searchResult.errorCode) {
+            ErrorCode.NO_INTERNET_CONNECTION -> {
+                searchStateUiLiveData.value = SearchStateUi.NoInternetError
+            }
+
+            ErrorCode.NOT_FOUND -> {
+                searchStateUiLiveData.value = SearchStateUi.Empty
+            }
+
+            else -> {
+                searchStateUiLiveData.value = SearchStateUi.ServerError
             }
         }
     }
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }

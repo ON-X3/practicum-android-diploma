@@ -14,20 +14,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
 import ru.practicum.android.diploma.domain.models.VacancyCard
 import ru.practicum.android.diploma.presentation.SearchStateUi
 import ru.practicum.android.diploma.presentation.SearchViewModel
-import kotlin.getValue
-import kotlin.toString
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.presentation.search.SearchState
-import ru.practicum.android.diploma.presentation.search.SearchViewModel
 
 class MainFragment : Fragment() {
     private var searchQuery: String = EMPTY_TEXT
@@ -45,7 +36,8 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(
             inflater,
             container,
-            false)
+            false
+        )
         return binding.root
     }
 
@@ -101,20 +93,13 @@ class MainFragment : Fragment() {
             if (actionId == EditorInfo.IME_ACTION_DONE &&
                 binding.searchInputText.text.isNotEmpty()
             ) {
-                viewModel.searchDebounce(binding.searchInputText.text.toString()) // TODO заменить на поиск без задержки
+                viewModel.searchWithoutDebounce(binding.searchInputText.text.toString())
             }
             false
         }
 
         viewModel.observeSearchStateUi().observe(viewLifecycleOwner) {
-            when (it) {
-                is SearchStateUi.Default -> showDefaultState()
-                is SearchStateUi.Loading -> showLoadingState()
-                is SearchStateUi.Success -> showContent(it.vacancies, it.amountOfVacancies, it.hasNextPage)
-                is SearchStateUi.Empty -> showEmpty()
-                is SearchStateUi.NoMoreItems -> {}
-                is SearchStateUi.Error -> {} // Обработка ошибок из E1T4
-            }
+            render(it)
         }
 
         binding.vacanciesList.addOnScrollListener(
@@ -150,22 +135,17 @@ class MainFragment : Fragment() {
         super.onDestroyView()
     }
 
-    // Для всех функций show... добавить изменение видимости вью,
-    // отвечающих за обработку различных ошибок (после слияния с E1T4)
     private fun showDefaultState() {
-        binding.apply {
-            placeHolderImage.setImageResource(R.drawable.il_search)
-            placeHolderImage.isVisible = true
-            commonProgressBar.isVisible = false
-            amountOfVacancies.isVisible = false
-            vacanciesList.isVisible = false
-        }
+        showPlaceholder(
+            imageRes = R.drawable.il_search,
+            textRes = null
+        )
         adapter.clear()
     }
 
     private fun showLoadingState() {
         binding.apply {
-            placeHolderImage.isVisible = false
+            placeholderLayout.isVisible = false
             commonProgressBar.isVisible = true
             amountOfVacancies.isVisible = false
             vacanciesList.isVisible = false
@@ -176,7 +156,7 @@ class MainFragment : Fragment() {
     private fun showContent(vacancies: List<VacancyCard>, amount: Int, hasNextPage: Boolean) {
         adapter.addVacancies(vacancies, hasNextPage)
         binding.apply {
-            placeHolderImage.isVisible = false
+            placeholderLayout.isVisible = false
             commonProgressBar.isVisible = false
             amountOfVacancies.text = getString(R.string.found_some_vacancies, amount)
             amountOfVacancies.isVisible = true
@@ -185,14 +165,29 @@ class MainFragment : Fragment() {
     }
 
     private fun showEmpty() {
-        binding.apply {
-            placeHolderImage.isVisible = false
-            commonProgressBar.isVisible = false
-            amountOfVacancies.text = getString(R.string.vacancies_not_found)
-            amountOfVacancies.isVisible = true
-            vacanciesList.isVisible = false
-        }
+        binding.amountOfVacancies.isVisible = true
+        binding.amountOfVacancies.setText(R.string.vacancies_not_found)
+        showPlaceholder(
+            imageRes = R.drawable.ic_nothing_found,
+            textRes = R.string.nothing_found
+        )
         adapter.clear()
+    }
+
+    private fun showNoInternetError() {
+        binding.amountOfVacancies.isVisible = false
+        showPlaceholder(
+            imageRes = R.drawable.ic_no_internet,
+            textRes = R.string.no_internet
+        )
+    }
+
+    private fun showServerError() {
+        binding.amountOfVacancies.isVisible = false
+        showPlaceholder(
+            imageRes = R.drawable.ic_server_error,
+            textRes = R.string.server_error
+        )
     }
 
     private fun onVacancyCardClick(vacancyCard: VacancyCard) {
@@ -206,44 +201,32 @@ class MainFragment : Fragment() {
         private const val SEARCH_KEY = "search_key"
         private const val EMPTY_TEXT = ""
     }
-    private fun render(state: SearchState) {
+
+    private fun render(state: SearchStateUi) {
         when (state) {
-            is SearchState.Default -> {
-                showPlaceholder(
-                    imageRes = R.drawable.il_search,
-                    textRes = null
-                )
-            }
-            is SearchState.Loading -> {
-                binding.placeholderLayout.isVisible = false
-            }
-            is SearchState.Content -> {
-                binding.placeholderLayout.isVisible = false
-            }
-            is SearchState.Empty -> {
-                showPlaceholder(
-                    imageRes = R.drawable.ic_nothing_found,
-                    textRes = R.string.nothing_found
-                )
-            }
-            is SearchState.NoInternet -> {
-                showPlaceholder(
-                    imageRes = R.drawable.ic_no_internet,
-                    textRes = R.string.no_internet
-                )
-            }
-            is SearchState.ServerError -> {
-                showPlaceholder(
-                    imageRes = R.drawable.ic_server_error,
-                    textRes = R.string.server_error
-                )
-            }
+            is SearchStateUi.Default -> showDefaultState()
+            is SearchStateUi.Loading -> showLoadingState()
+            is SearchStateUi.Success -> showContent(
+                state.vacancies,
+                state.amountOfVacancies,
+                state.hasNextPage
+            )
+
+            is SearchStateUi.Empty -> showEmpty()
+
+            is SearchStateUi.NoInternetError -> showNoInternetError()
+
+            is SearchStateUi.ServerError -> showServerError()
         }
     }
 
     private fun showPlaceholder(imageRes: Int, textRes: Int?) {
-        binding.placeholderLayout.isVisible = true
-        binding.placeHolderImage.setImageResource(imageRes)
+        binding.apply {
+            placeholderLayout.isVisible = true
+            placeHolderImage.setImageResource(imageRes)
+            commonProgressBar.isVisible = false
+            vacanciesList.isVisible = false
+        }
 
         if (textRes != null) {
             binding.placeholderText.isVisible = true
