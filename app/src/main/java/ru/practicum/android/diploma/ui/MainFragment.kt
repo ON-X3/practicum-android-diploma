@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -43,6 +45,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val inputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
         _adapter = VacancyCardAdapter { vacancyCard ->
             onVacancyCardClick(vacancyCard)
@@ -56,6 +60,7 @@ class MainFragment : Fragment() {
 
         binding.clearIcon.setOnClickListener {
             binding.searchInputText.setText("")
+            inputMethodManager?.hideSoftInputFromWindow(binding.searchInputText.windowToken, 0)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -136,6 +141,7 @@ class MainFragment : Fragment() {
     }
 
     private fun showDefaultState() {
+        binding.amountOfVacancies.isVisible = false
         showPlaceholder(
             imageRes = R.drawable.il_search,
             textRes = null
