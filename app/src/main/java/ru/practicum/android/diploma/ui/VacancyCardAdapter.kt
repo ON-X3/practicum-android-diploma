@@ -33,6 +33,12 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
         notifyDataSetChanged()
     }
 
+    fun updateVacancies(newVacancies: List<VacancyCard>) {
+        vacancies.clear()
+        vacancies.addAll(newVacancies)
+        notifyDataSetChanged()
+    }
+
     fun clear() {
         hasNextPage = false
         vacancies.clear()
