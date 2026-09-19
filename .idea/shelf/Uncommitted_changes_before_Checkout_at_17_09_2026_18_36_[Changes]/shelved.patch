@@ -1,0 +1,53 @@
+Index: app/src/main/java/ru/practicum/android/diploma/data/converters/VacancyDetailConverter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.data.converters\r\n\r\nimport ru.practicum.android.diploma.data.db.entity.VacancyDetailEntity\r\nimport ru.practicum.android.diploma.domain.models.Employer\r\nimport ru.practicum.android.diploma.domain.models.VacancyDetail\r\nimport ru.practicum.android.diploma.domain.models.VacancySalary\r\n\r\nclass VacancyDetailConverter {\r\n\r\n    fun toEntity(vacancy: VacancyDetail): VacancyDetailEntity =\r\n        VacancyDetailEntity(\r\n            id = vacancy.id,\r\n            name = vacancy.name,\r\n            description = vacancy.descriptionHtml,\r\n            url = vacancy.sharingUrl,\r\n            salaryFrom = vacancy.salary?.from,\r\n            salaryTo = vacancy.salary?.to,\r\n            salaryCurrency = vacancy.salary?.currency,\r\n            address = vacancy.address,\r\n            experience = vacancy.experience,\r\n            schedule = vacancy.schedule,\r\n            employment = vacancy.employment,\r\n            contacts = null,\r\n            employerName = vacancy.employer.name,\r\n            employerLogo = vacancy.employer.logo,\r\n            area = vacancy.areaName,\r\n            industry = null,\r\n            skills = vacancy.skills.joinToString(separator = \"|\"),\r\n        )\r\n\r\n    fun toDomain(entity: VacancyDetailEntity?): VacancyDetail? =\r\n        entity?.let {\r\n            VacancyDetail(\r\n                id = it.id,\r\n                name = it.name,\r\n                descriptionHtml = it.description,\r\n                salary = if (it.salaryFrom != null || it.salaryTo != null || it.salaryCurrency != null) {\r\n                    VacancySalary(\r\n                        from = it.salaryFrom,\r\n                        to = it.salaryTo,\r\n                        currency = it.salaryCurrency,\r\n                    )\r\n                } else {\r\n                    null\r\n                },\r\n                address = it.address.orEmpty(),\r\n                experience = it.experience.orEmpty(),\r\n                schedule = it.schedule.orEmpty(),\r\n                employment = it.employment.orEmpty(),\r\n                employer = Employer(\r\n                    name = it.employerName.orEmpty(),\r\n                    logo = it.employerLogo.orEmpty(),\r\n                ),\r\n                areaName = it.area.orEmpty(),\r\n                skills = it.skills\r\n                    ?.split(\"|\")\r\n                    ?.filter { it.isNotBlank() }\r\n                    .orEmpty(),\r\n                sharingUrl = it.url.orEmpty(),\r\n                isFavorite = true,\r\n            )\r\n        }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/data/converters/VacancyDetailConverter.kt b/app/src/main/java/ru/practicum/android/diploma/data/converters/VacancyDetailConverter.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/data/converters/VacancyDetailConverter.kt	(revision 41d4ec4f75c862034526e179b814f6ff550c1735)
++++ b/app/src/main/java/ru/practicum/android/diploma/data/converters/VacancyDetailConverter.kt	(date 1789496869531)
+@@ -26,6 +26,7 @@
+             area = vacancy.areaName,
+             industry = null,
+             skills = vacancy.skills.joinToString(separator = "|"),
++            timestamp = System.currentTimeMillis()
+         )
+ 
+     fun toDomain(entity: VacancyDetailEntity?): VacancyDetail? =
+Index: app/src/main/java/ru/practicum/android/diploma/data/db/dao/VacancyDetailDao.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.data.db.dao\r\n\r\nimport androidx.room.Dao\r\nimport androidx.room.Insert\r\nimport androidx.room.OnConflictStrategy\r\nimport androidx.room.Query\r\nimport kotlinx.coroutines.flow.Flow\r\nimport ru.practicum.android.diploma.data.db.entity.VacancyDetailEntity\r\n\r\n@Dao\r\ninterface VacancyDetailDao {\r\n    @Insert(entity = VacancyDetailEntity::class, onConflict = OnConflictStrategy.REPLACE)\r\n    suspend fun insertVacancy(vacancy: VacancyDetailEntity)\r\n\r\n    @Query(\"SELECT * FROM vacancy_table\")\r\n    fun getVacancyList(): Flow<List<VacancyDetailEntity>>\r\n\r\n    @Query(\"SELECT * FROM vacancy_table WHERE id = :vacancyId\")\r\n    suspend fun getVacancyById(vacancyId: String): VacancyDetailEntity?\r\n\r\n    @Query(\"DELETE FROM vacancy_table WHERE id = :vacancyId\")\r\n    suspend fun deleteVacancyById(vacancyId: String)\r\n\r\n    @Query(\"SELECT EXISTS(SELECT 1 FROM vacancy_table WHERE id = :id)\")\r\n    suspend fun isFavorite(id: String): Boolean\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/data/db/dao/VacancyDetailDao.kt b/app/src/main/java/ru/practicum/android/diploma/data/db/dao/VacancyDetailDao.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/data/db/dao/VacancyDetailDao.kt	(revision 41d4ec4f75c862034526e179b814f6ff550c1735)
++++ b/app/src/main/java/ru/practicum/android/diploma/data/db/dao/VacancyDetailDao.kt	(date 1789496900675)
+@@ -12,7 +12,7 @@
+     @Insert(entity = VacancyDetailEntity::class, onConflict = OnConflictStrategy.REPLACE)
+     suspend fun insertVacancy(vacancy: VacancyDetailEntity)
+ 
+-    @Query("SELECT * FROM vacancy_table")
++    @Query("SELECT * FROM vacancy_table ORDER BY timestamp DESC")
+     fun getVacancyList(): Flow<List<VacancyDetailEntity>>
+ 
+     @Query("SELECT * FROM vacancy_table WHERE id = :vacancyId")
+Index: app/src/main/java/ru/practicum/android/diploma/data/db/entity/VacancyDetailEntity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.data.db.entity\r\n\r\nimport androidx.room.Entity\r\nimport androidx.room.PrimaryKey\r\n\r\n@Entity(tableName = \"vacancy_table\")\r\ndata class VacancyDetailEntity(\r\n    @PrimaryKey\r\n    val id: String,\r\n    val name: String,\r\n    val description: String,\r\n    val url: String?,\r\n    val salaryFrom: Int?,\r\n    val salaryTo: Int?,\r\n    val salaryCurrency: String?,\r\n    val address: String?,\r\n    val experience: String?,\r\n    val schedule: String?,\r\n    val employment: String?,\r\n    val contacts: String?,\r\n    val employerName: String?,\r\n    val employerLogo: String?,\r\n    val area: String?,\r\n    val industry: String?,\r\n    val skills: String?,\r\n)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/data/db/entity/VacancyDetailEntity.kt b/app/src/main/java/ru/practicum/android/diploma/data/db/entity/VacancyDetailEntity.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/data/db/entity/VacancyDetailEntity.kt	(revision 41d4ec4f75c862034526e179b814f6ff550c1735)
++++ b/app/src/main/java/ru/practicum/android/diploma/data/db/entity/VacancyDetailEntity.kt	(date 1789496825295)
+@@ -23,4 +23,5 @@
+     val area: String?,
+     val industry: String?,
+     val skills: String?,
++    val timestamp: Long
+ )
