@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.FilterInteractor
@@ -14,7 +15,10 @@ import ru.practicum.android.diploma.domain.models.RegionArea
 import ru.practicum.android.diploma.domain.util.Resource
 import ru.practicum.android.diploma.util.Debouncer
 
-class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
+class RegionViewModel(
+    private val filterInteractor: FilterInteractor,
+    private val appScope: CoroutineScope
+) : ViewModel() {
 
     private val countries: MutableList<FilterArea> = mutableListOf()
     private val regions: MutableList<FilterArea> = mutableListOf()
@@ -85,7 +89,7 @@ class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     fun onAreaClick(name: String) {
         val selectedArea = filteredRegions.find { it.name == name }!!
         val country = findCountryOf(selectedArea)
-        viewModelScope.launch {
+        appScope.launch {
             filterInteractor.updateArea(
                 FilterAreaDetails(
                     CountryArea(country.id, country.name),
