@@ -92,7 +92,6 @@ class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewMode
                     RegionArea(selectedArea.id, selectedArea.name)
                 )
             )
-
         }
     }
 

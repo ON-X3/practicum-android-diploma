@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.presentation.SearchViewModel
 
 val viewModelModule = module {
     viewModel {
-        SearchViewModel(get())
+        SearchViewModel(get(), get())
     }
     viewModel {
         RegionViewModel(get())
