@@ -16,7 +16,8 @@ interface FilterInteractor {
     suspend fun updateOnlyWithSalary(onlyWithSalary: Boolean)
     suspend fun clearFilterParameters()
     fun getFilterParameters(): Flow<FilterParameters?>
-    suspend fun getFilterAreas(): Resource<List<FilterArea>>
+    suspend fun getFilterCountries(): Resource<List<FilterArea>>
+    suspend fun getFilterRegions(countryId: Int? = null): Resource<List<FilterArea>>
     suspend fun getFilterIndustries(): Resource<List<FilterIndustry>>
 
 }

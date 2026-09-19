@@ -9,6 +9,8 @@
     <string name="devWorkers">Над приложением \nработали</string>
     <string name="bestDevelopers">Иван Новиков \nЕрегин Вадим \nНиколай Ордин \nВиктор И. \nАлексей Акулов </string>
     <string name="no_salary_info">Зарплата не указана</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="required_experience">Требуемый опыт</string>
     <string name="found_some_vacancies">Найдено %1$d вакансий</string>
     <string name="vacancies_not_found">Таких вакансий нет</string>
     <string name="no_internet">Нет интернета</string>
@@ -18,4 +20,7 @@
     <string name="region_selection">Выбор региона</string>
     <string name="regions_not_found">Такого региона нет</string>
     <string name="regions_error">Не удалось получить\nсписок</string>
+    <string name="no_internet_toast_message">Проверьте подключение к интернету</string>
+    <string name="error_toast_message">Произошла ошибка</string>
+
 </resources>

@@ -45,5 +45,9 @@ val dataModule = module {
         )
     }
     factory { Gson() }
-    single<FilterRepository> { FilterRepositoryImpl(get(), get()) }
+    single<FilterRepository> { FilterRepositoryImpl(
+        get(),
+        get(),
+        true
+    ) }
 }
