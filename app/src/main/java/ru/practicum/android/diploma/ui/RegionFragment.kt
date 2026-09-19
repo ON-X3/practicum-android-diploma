@@ -1,9 +1,11 @@
 package ru.practicum.android.diploma.ui
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -34,10 +36,35 @@ class RegionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         _adapter = FilterAreaAdapter { name ->
             onAreaClick(name)
         }
         binding.areasList.adapter = adapter
+
+        viewModel.state().observe(viewLifecycleOwner) {
+            when (it) {
+                is RegionState.Content -> showContent(it.regions)
+                is RegionState.Empty -> showEmptyState()
+                is RegionState.Error -> showErrorState()
+                is RegionState.Loading -> showLoading()
+            }
+        }
+
+        setupListeners()
+    }
+
+    override fun onDestroyView() {
+        binding.areasList.adapter = null
+        _adapter = null
+        _binding = null
+        super.onDestroyView()
+    }
+
+    private fun setupListeners() {
+        val inputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+
         binding.searchInputText.addTextChangedListener { s ->
             val hasText = !s.isNullOrEmpty()
             binding.clearIcon.isVisible = hasText
@@ -57,29 +84,15 @@ class RegionFragment : Fragment() {
             )
         }
 
-        viewModel.state().observe(viewLifecycleOwner) {
-            when (it) {
-                is RegionState.Content -> showContent(it.regions)
-                is RegionState.Empty -> showEmptyState()
-                is RegionState.Error -> showErrorState()
-                is RegionState.Loading -> showLoading()
-            }
-        }
-
         binding.clearIcon.setOnClickListener {
             binding.searchInputText.setText("")
+            inputMethodManager?.hideSoftInputFromWindow(binding.searchInputText.windowToken, 0)
         }
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-    }
 
-    override fun onDestroyView() {
-        binding.areasList.adapter = null
-        _adapter = null
-        _binding = null
-        super.onDestroyView()
     }
 
     private fun showContent(regions: List<String>) {

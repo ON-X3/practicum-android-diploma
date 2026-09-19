@@ -16,10 +16,11 @@ import ru.practicum.android.diploma.util.Debouncer
 
 class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
 
-    private val allAreas: MutableList<FilterArea> = mutableListOf()
+    private val countries: MutableList<FilterArea> = mutableListOf()
+    private val regions: MutableList<FilterArea> = mutableListOf()
     private val filteredRegions: MutableList<FilterArea> = mutableListOf()
     private var filterExpression: String = ""
-    private var currentCountryId: Int? = null
+    private var currentCountry: CountryArea? = null
     private var filterDebouncer = Debouncer<Unit>(
         FILTER_DEBOUNCE_DELAY,
         viewModelScope,
@@ -30,20 +31,29 @@ class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     init {
         viewModelScope.launch {
-            currentCountryId = filterInteractor.getFilterParameters().first()?.area?.country?.countryId
+            currentCountry = filterInteractor.getFilterParameters().first()?.area?.country
             getFilterAreas()
         }
     }
 
-    suspend fun getFilterAreas() {
+    private suspend fun getFilterAreas() {
         _state.value = RegionState.Loading
-        val res = filterInteractor.getFilterAreas()
-        if (res is Resource.Success) {
-            allAreas.addAll(res.data!!)
-            if (allAreas.isEmpty()) {
+        val regionsRes = filterInteractor.getFilterRegions(currentCountry?.countryId)
+        val countriesRes = if (currentCountry == null) {
+            filterInteractor.getFilterCountries()
+        } else {
+            Resource.Success(
+                listOf(
+                    FilterArea(currentCountry!!.countryId, null, currentCountry!!.countryName)
+                )
+            )
+        }
+        if (regionsRes is Resource.Success && countriesRes is Resource.Success) {
+            countries.addAll(countriesRes.data!!)
+            regions.addAll(regionsRes.data!!)
+            if (regions.isEmpty()) {
                 _state.value = RegionState.Error
             } else {
-                filterByCountry()
                 filterDebouncer.invoke(Unit)
             }
         } else {
@@ -51,23 +61,9 @@ class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         }
     }
 
-    private fun filterByCountry() {
-        if (currentCountryId != null) {
-            val currentCountry = allAreas.find { it.id == currentCountryId }
-            if (currentCountry != null) {
-                allAreas.clear()
-                allAreas.add(currentCountry)
-            }
-        }
-    }
-
     private fun filterRegions() {
         filteredRegions.clear()
-        allAreas.forEach { country ->
-            filteredRegions.addAll(country.areas.filter {
-                it.name.contains(filterExpression, true)
-            })
-        }
+        filteredRegions.addAll(regions.filter { it.name.contains(filterExpression, true) })
         if (filteredRegions.isEmpty()) {
             _state.value = RegionState.Empty
         } else {
@@ -87,17 +83,31 @@ class RegionViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun onAreaClick(name: String) {
-        val selectedArea = filteredRegions.find { it.name == name }
-        val country = allAreas.find { it.id == selectedArea!!.parentId }
+        val selectedArea = filteredRegions.find { it.name == name }!!
+        val country = findCountryOf(selectedArea)
         viewModelScope.launch {
             filterInteractor.updateArea(
                 FilterAreaDetails(
-                    CountryArea(country!!.id, country.name),
-                    RegionArea(selectedArea!!.id, selectedArea.name)
+                    CountryArea(country.id, country.name),
+                    RegionArea(selectedArea.id, selectedArea.name)
                 )
             )
 
         }
+    }
+
+    fun findCountryOf(region: FilterArea): FilterArea {
+        var country: FilterArea?
+        var currentIterationRegion = region
+        while (true) {
+            country = countries.find { it.id == currentIterationRegion.parentId }
+            if (country != null) {
+                break
+            } else {
+                currentIterationRegion = regions.find { it.id == currentIterationRegion.parentId }!!
+            }
+        }
+        return country
     }
 
     companion object {
