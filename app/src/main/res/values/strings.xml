@@ -16,6 +16,10 @@
     <string name="no_internet">Нет интернета</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
+    <string name="search_region_hint">Введите регион</string>
+    <string name="region_selection">Выбор региона</string>
+    <string name="regions_not_found">Такого региона нет</string>
+    <string name="regions_error">Не удалось получить\nсписок</string>
     <string name="no_internet_toast_message">Проверьте подключение к интернету</string>
     <string name="error_toast_message">Произошла ошибка</string>
 

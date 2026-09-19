@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.FilterInteractor
 import ru.practicum.android.diploma.domain.api.SearchInteractor
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.VacanciesSearchResult
@@ -16,7 +17,8 @@ import ru.practicum.android.diploma.util.Debouncer
 import ru.practicum.android.diploma.util.SingleLiveEvent
 
 class SearchViewModel(
-    val searchInteractor: SearchInteractor
+    private val searchInteractor: SearchInteractor,
+    private val filterInteractor: FilterInteractor
 ) : ViewModel() {
     private var currentExpression: String = ""
     private var currentFilter: FilterParameters? = null
@@ -32,17 +34,26 @@ class SearchViewModel(
     private val searchStateUiLiveData = MutableLiveData<SearchStateUi>(SearchStateUi.Default)
     fun observeSearchStateUi(): LiveData<SearchStateUi> = searchStateUiLiveData
 
-    private val isFilterActive = MutableLiveData(false)
-    fun observeIsFilterActive(): LiveData<Boolean> = isFilterActive
+    private val isFilterActiveAndChanged = MutableLiveData(Pair(false, false))
+    fun observeIsFilterActiveAndChanged(): LiveData<Pair<Boolean, Boolean>> = isFilterActiveAndChanged
 
     private val errorToastLiveData = SingleLiveEvent<ErrorCode>()
     fun errorToast(): LiveData<ErrorCode> = errorToastLiveData
 
-    fun updateFilter(filter: FilterParameters?) {
-        currentPage = 1
-        currentFilter = filter
+    init {
         viewModelScope.launch {
-            searchVacancies(currentExpression)
+            filterInteractor.getFilterParameters().collect {
+                val isFilterChanged = it != currentFilter
+                if (isFilterChanged) {
+                    currentPage = 1
+                    vacanciesList.clear()
+                }
+                currentFilter = it
+                isFilterActiveAndChanged.value = Pair(currentFilter != null, isFilterChanged)
+                if (currentExpression.isNotEmpty()) {
+                    searchWithoutDebounce(currentExpression)
+                }
+            }
         }
     }
 
