@@ -40,8 +40,7 @@
             android:imeOptions="actionDone"
             android:minHeight="@dimen/height56dp"
             android:singleLine="true"
-            android:textColor="@color/uniBlack"
-            android:textCursorDrawable="@drawable/edit_text_cursor" />
+            android:textColor="@color/uniBlack" />
 
         <ImageView
             android:id="@+id/clearIcon"
