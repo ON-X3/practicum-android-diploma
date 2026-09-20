@@ -18,5 +18,5 @@
     <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
     <string name="no_internet_toast_message">Проверьте подключение к интернету</string>
     <string name="error_toast_message">Произошла ошибка</string>
-
+    <string name="key_skills">Ключевые навыки</string>
 </resources>

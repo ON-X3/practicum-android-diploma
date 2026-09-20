@@ -30,7 +30,7 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        layoutServerError = view.findViewById(R.id.layoutServerError)
+        layoutServerError = view.findViewById(R.id.placeholder)
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)

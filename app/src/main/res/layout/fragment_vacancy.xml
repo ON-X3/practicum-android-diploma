@@ -46,30 +46,34 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/layoutServerError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/basic_padding"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backButton">
 
         <ImageView
-            android:id="@+id/imageServerError"
-            android:layout_width="wrap_content"
+            android:id="@+id/placeholderImage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_server_error_vc" />
 
         <TextView
-            android:id="@+id/textServerError"
+            android:id="@+id/placeholderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="@color/ypBlack"
-            android:fontFamily="@font/ys_display_medium"
             android:text="@string/server_error"
-            android:textSize="22sp" />
+            android:textAppearance="@style/TextAppearanceMedium22"
+            android:textColor="@color/ypBlack" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -173,33 +177,58 @@
                 style="@style/TextAppearanceRegular16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/micro_padding"
                 app:layout_constraintStart_toStartOf="@id/requiredExperience"
                 app:layout_constraintTop_toBottomOf="@id/requiredExperience"
-                android:layout_marginTop="@dimen/micro_padding"
                 tools:text="от 1 года до 3 лет" />
+
             <TextView
                 android:id="@+id/employmentAndSchedule"
                 style="@style/TextAppearanceRegular16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_padding"
                 app:layout_constraintStart_toStartOf="@id/experience"
                 app:layout_constraintTop_toBottomOf="@id/experience"
-                android:layout_marginTop="@dimen/small_padding"
                 tools:text="Полная занятость, Удаленная работа" />
+
             <TextView
-                android:id="@+id/descriptionHtml"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/ypBlack"
                 android:layout_marginHorizontal="@dimen/margin16dp"
                 android:layout_marginTop="@dimen/margin32dp"
                 android:layout_marginBottom="@dimen/small_padding"
-                app:layout_constraintTop_toBottomOf="@id/employmentAndSchedule"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/ypBlack"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Описание вакансии"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/employmentAndSchedule"
+                tools:text="Описание вакансии" />
+
+            <TextView
+                android:id="@+id/skillsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:text="@string/key_skills"
+                android:textAppearance="@style/TextAppearanceMedium22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/skillsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                android:layout_marginTop="@dimen/basic_padding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/skillsHeader"
+                tools:itemCount="5"
+                tools:listitem="@layout/skill_item" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 
