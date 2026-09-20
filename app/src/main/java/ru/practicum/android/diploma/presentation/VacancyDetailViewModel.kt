@@ -49,7 +49,10 @@ class VacancyDetailViewModel(
     fun onFavoriteButtonClick() {
         val isFavorite = (_state.value as VacancyDetailState.Content).vacancy.isFavorite
         _state.value =
-            VacancyDetailState.Content((_state.value as VacancyDetailState.Content).vacancy.copy(isFavorite = !isFavorite))
+            VacancyDetailState.Content(
+                (_state.value as VacancyDetailState.Content)
+                    .vacancy.copy(isFavorite = !isFavorite)
+            )
         viewModelScope.launch {
             if (isFavorite) {
                 favoritesInteractor.deleteFromFavoriteById(vacancyId)
