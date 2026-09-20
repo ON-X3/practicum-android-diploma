@@ -41,12 +41,6 @@ class FavoritesFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
-        viewModel.getFavorites()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getFavorites()
     }
 
     private fun render(state: FavoritesScreenState) {
