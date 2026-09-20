@@ -49,7 +49,7 @@ class SearchRepositoryImpl(
         val response = networkClient.doRequest(request)
 
         return when (response.resultCode) {
-            OK_CODE -> {
+            NetworkClient.OK_CODE -> {
                 val dto = (response as? VacancyDetailResponse)?.items
                 if (dto == null) {
                     Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
@@ -57,8 +57,8 @@ class SearchRepositoryImpl(
                     Resource.Success(vacancyDetailConverter.toDomain(dto))
                 }
             }
-            NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
-            BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
+            NetworkClient.NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
+            NetworkClient.BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
             else -> Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }

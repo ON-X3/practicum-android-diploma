@@ -16,7 +16,7 @@ interface VacancyDetailDao {
     fun getVacancyList(): Flow<List<VacancyDetailEntity>>
 
     @Query("SELECT * FROM vacancy_table WHERE id = :vacancyId")
-    suspend fun getVacancyById(vacancyId: String): VacancyDetailEntity?
+    suspend fun getVacancyById(vacancyId: String): VacancyDetailEntity
 
     @Query("DELETE FROM vacancy_table WHERE id = :vacancyId")
     suspend fun deleteVacancyById(vacancyId: String)

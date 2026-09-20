@@ -17,13 +17,6 @@ data class VacancyDetailDTO(
     val industry: IdNameDTO
 )
 
-data class SalaryDTO(
-    val id: String?,
-    val currency: String?,
-    val from: Int?,
-    val to: Int?
-)
-
 data class AddressDTO(
     val raw: String?
 )
