@@ -12,27 +12,43 @@
         style="@style/ToolbarStyle"
         app:title="@string/favorites" />
 
+    <FrameLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue"
+
+            />
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_gravity="center"
         android:layout_marginHorizontal="@dimen/basic_padding"
+        android:layout_weight="1"
 
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
 
-        tools:visibility="visible">
+        >
 
         <ImageView
             android:id="@+id/placeholderImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            tools:src="@drawable/il_empty_list"/>
+            android:scaleType="fitCenter"
+            tools:src="@drawable/il_empty_list" />
 
         <TextView
             android:id="@+id/placeholderText"
@@ -41,21 +57,20 @@
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            tools:text="@string/list_is_empty"
             android:textAppearance="@style/TextAppearanceMedium22"
-            android:textColor="@color/ypBlack" />
+            android:textColor="@color/ypBlack"
+            tools:text="@string/list_is_empty" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesList"
-        android:layout_marginTop="@dimen/basic_padding"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginHorizontal="@dimen/basic_padding"
-        tools:listitem="@layout/vacancy_card_item"
-        tools:itemCount="2"
+        android:layout_marginTop="@dimen/basic_padding"
+        android:layout_weight="1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:visibility="gone"
-        />
+        tools:itemCount="2"
+        tools:listitem="@layout/vacancy_card_item"
+        tools:visibility="gone" />
 </LinearLayout>
