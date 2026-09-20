@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import ru.practicum.android.diploma.domain.api.SharingRepository
 
-class SharingRepositoryImpl(private val context: Context): SharingRepository {
+class SharingRepositoryImpl(private val context: Context) : SharingRepository {
     override fun shareVacancy(sharingUrl: String) {
         val share = Intent(Intent.ACTION_SEND)
         share.apply {

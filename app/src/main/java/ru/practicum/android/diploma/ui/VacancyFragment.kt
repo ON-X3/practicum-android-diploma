@@ -76,17 +76,29 @@ class VacancyFragment : Fragment() {
     }
 
     private fun showPlaceholder(error: ErrorCode) {
-        if (error == ErrorCode.NOT_FOUND) {
-            binding.apply {
-                placeholderImage.setImageResource(R.drawable.il_404_not_found)
-                placeholderText.setText(R.string.not_found_404_placeholder_text)
+        when (error) {
+            ErrorCode.NOT_FOUND -> {
+                binding.apply {
+                    placeholderImage.setImageResource(R.drawable.il_404_not_found)
+                    placeholderText.setText(R.string.not_found_404_placeholder_text)
+                }
             }
-        } else {
-            binding.apply {
-                placeholderImage.setImageResource(R.drawable.ic_server_error_vc)
-                placeholderText.setText(R.string.server_error)
+
+            ErrorCode.NO_INTERNET_CONNECTION -> {
+                binding.apply {
+                    placeholderImage.setImageResource(R.drawable.ic_no_internet)
+                    placeholderText.setText(R.string.no_internet)
+                }
+            }
+
+            else -> {
+                binding.apply {
+                    placeholderImage.setImageResource(R.drawable.ic_server_error_vc)
+                    placeholderText.setText(R.string.server_error)
+                }
             }
         }
+
     }
 
     private fun showLoading() {
@@ -178,22 +190,23 @@ class VacancyFragment : Fragment() {
     fun bindEmploymentAndSchedule(employment: String?, schedule: String?) {
         if (employment.isNullOrBlank() && schedule.isNullOrBlank()) {
             binding.employmentAndSchedule.isVisible = false
-        } else {
-            binding.apply {
-                employmentAndSchedule.text = buildString {
-                    if (!employment.isNullOrBlank()) {
-                        append(employment)
-                    }
-                    if (toString().isNotEmpty() && !schedule.isNullOrBlank()) {
-                        append(", ")
-                    }
-                    if (!schedule.isNullOrBlank()) {
-                        append(schedule)
-                    }
-                }
-                employmentAndSchedule.isVisible = true
-            }
+            return
         }
+        binding.apply {
+            employmentAndSchedule.text = buildString {
+                if (!employment.isNullOrBlank()) {
+                    append(employment)
+                }
+                if (toString().isNotEmpty() && !schedule.isNullOrBlank()) {
+                    append(", ")
+                }
+                if (!schedule.isNullOrBlank()) {
+                    append(schedule)
+                }
+            }
+            employmentAndSchedule.isVisible = true
+        }
+
     }
 
     companion object {

@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.ui
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class SkillAdapter(): RecyclerView.Adapter<SkillViewHolder>() {
+class SkillAdapter : RecyclerView.Adapter<SkillViewHolder>() {
 
     private val skills: MutableList<String> = mutableListOf()
 

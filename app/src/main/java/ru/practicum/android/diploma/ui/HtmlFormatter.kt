@@ -30,7 +30,7 @@ class HtmlFormatter(private val context: Context) {
         customTagString = "<div>$customTagString</div>"
         Log.d("HTML", customTagString)
         val spanned = Html.fromHtml(customTagString, Html.FROM_HTML_MODE_COMPACT, null, CustomTagHandler(context))
-        return SpannableStringBuilder(spanned).delete(spanned.length-1, spanned.length)
+        return SpannableStringBuilder(spanned).delete(spanned.length - 1, spanned.length)
     }
 }
 

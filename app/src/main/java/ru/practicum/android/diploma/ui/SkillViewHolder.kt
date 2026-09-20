@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.SkillItemBinding
 
-class SkillViewHolder(private val binding: SkillItemBinding): RecyclerView.ViewHolder(binding.root) {
+class SkillViewHolder(private val binding: SkillItemBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(skill: String) {
         binding.skill.text = skill
     }
