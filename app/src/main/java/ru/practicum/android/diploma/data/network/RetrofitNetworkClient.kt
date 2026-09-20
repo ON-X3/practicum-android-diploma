@@ -9,6 +9,8 @@ import ru.practicum.android.diploma.data.dto.FilterAreasResponse
 import ru.practicum.android.diploma.data.dto.FilterIndustriesRequest
 import ru.practicum.android.diploma.data.dto.FilterIndustriesResponse
 import ru.practicum.android.diploma.data.dto.Response
+import ru.practicum.android.diploma.data.dto.VacancyDetailRequest
+import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 
 class RetrofitNetworkClient(
@@ -24,7 +26,17 @@ class RetrofitNetworkClient(
             is VacancySearchRequest -> doVacanciesRequest(dto)
             is FilterAreasRequest -> doFilterAreasRequest()
             is FilterIndustriesRequest -> doFilterIndustriesRequest()
+            is VacancyDetailRequest -> doVacancyDetailRequest(dto)
             else -> Response().apply { resultCode = NetworkClient.BAD_REQUEST_ERROR_CODE }
+        }
+    }
+
+    private suspend fun doVacancyDetailRequest(request: VacancyDetailRequest): Response {
+        return try {
+            val vacancyDetail = searchApi.getVacancyDetails(request.vacancyId)
+            VacancyDetailResponse(vacancyDetail).apply { resultCode = NetworkClient.OK_CODE }
+        } catch (e: HttpException) {
+            return Response().apply { resultCode = e.code() }
         }
     }
 

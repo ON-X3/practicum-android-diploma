@@ -14,7 +14,6 @@ fun AreaDTO.toDomainFilterArea(): FilterArea {
     return FilterArea(
         id = id,
         parentId = parentId,
-        name = name,
-        areas = areas.map { it.toDomainFilterArea() }
+        name = name
     )
 }

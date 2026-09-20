@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui
+package ru.practicum.android.diploma.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,15 +9,14 @@ import ru.practicum.android.diploma.domain.api.SearchInteractor
 import ru.practicum.android.diploma.domain.api.SharingInteractor
 import ru.practicum.android.diploma.domain.util.ErrorCode
 import ru.practicum.android.diploma.domain.util.Resource
-import ru.practicum.android.diploma.presentation.VacancyDetailState
 
 class VacancyDetailViewModel(
     private val vacancyId: String,
-    private val vacancyDetailInteractor: SearchInteractor,
+    private val searchInteractor: SearchInteractor,
     private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
-    private val requestStateLiveData = MutableLiveData<VacancyDetailState>()
-    val requestState: LiveData<VacancyDetailState> = requestStateLiveData
+    private val _state = MutableLiveData<VacancyDetailState>()
+    val state: LiveData<VacancyDetailState> = _state
 
     init {
         getVacancyDetail(vacancyId)
@@ -25,11 +24,11 @@ class VacancyDetailViewModel(
 
     private fun getVacancyDetail(vacancyId: String) {
         viewModelScope.launch {
-            requestStateLiveData.value = VacancyDetailState.Loading
-            when (val result = vacancyDetailInteractor.getVacancyDetail(vacancyId)) {
+            _state.value = VacancyDetailState.Loading
+            when (val result = searchInteractor.getVacancyDetail(vacancyId)) {
                 is Resource.Success -> {
                     val data = result.data
-                    requestStateLiveData.value = if (data != null) {
+                    _state.value = if (data != null) {
                         VacancyDetailState.Content(data)
                     } else {
                         VacancyDetailState.Error(ErrorCode.INTERNAL_SERVER_ERROR)
@@ -37,7 +36,7 @@ class VacancyDetailViewModel(
                 }
                 is Resource.Error -> {
                     val errorCode = result.errorCode ?: ErrorCode.INTERNAL_SERVER_ERROR
-                    requestStateLiveData.value = VacancyDetailState.Error(errorCode)
+                    _state.value = VacancyDetailState.Error(errorCode)
                 }
             }
 
@@ -45,8 +44,8 @@ class VacancyDetailViewModel(
     }
 
     fun shareVacancy() {
-        val vacancy = requestState.value
+        val vacancy = state.value
         if (vacancy !is VacancyDetailState.Content) return
-        sharingInteractor.shareVacancy(vacancy.vacancy.sharingUrl)
+        sharingInteractor.shareVacancy(vacancy.vacancy.url)
     }
 }

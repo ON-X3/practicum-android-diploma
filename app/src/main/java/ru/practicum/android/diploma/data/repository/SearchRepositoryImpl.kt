@@ -1,6 +1,9 @@
 package ru.practicum.android.diploma.data.repository
 
+import ru.practicum.android.diploma.data.converters.VacancyDetailConverter
 import ru.practicum.android.diploma.data.converters.VacancyDomainConverter
+import ru.practicum.android.diploma.data.dto.VacancyDetailRequest
+import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
@@ -13,7 +16,8 @@ import ru.practicum.android.diploma.domain.util.Resource
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val vacancyDomainConverter: VacancyDomainConverter
+    private val vacancyDomainConverter: VacancyDomainConverter,
+    private val vacancyDetailConverter: VacancyDetailConverter
 ) : SearchRepository {
     override suspend fun searchVacancies(
         expression: String,
@@ -42,6 +46,22 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun getVacancyDetail(id: String): Resource<VacancyDetail> {
-        TODO("Not yet implemented")
+        val request = VacancyDetailRequest(id)
+        val response = networkClient.doRequest(request)
+
+        return when (response.resultCode) {
+            NetworkClient.OK_CODE -> {
+                val dto = (response as? VacancyDetailResponse)?.vacancy
+                if (dto == null) {
+                    Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
+                } else {
+                    Resource.Success(vacancyDetailConverter.toDomain(dto))
+                }
+            }
+            NetworkClient.NOT_FOUND -> Resource.Error(ErrorCode.NOT_FOUND)
+            NetworkClient.NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
+            NetworkClient.BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
+            else -> Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
+        }
     }
 }

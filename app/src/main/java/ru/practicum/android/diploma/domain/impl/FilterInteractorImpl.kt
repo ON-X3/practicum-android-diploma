@@ -32,8 +32,10 @@ class FilterInteractorImpl(private val filterRepository: FilterRepository) : Fil
     }
 
     override fun getFilterParameters(): Flow<FilterParameters?> = filterRepository.getFilterParameters()
+    override suspend fun getFilterCountries(): Resource<List<FilterArea>> = filterRepository.getFilterCountries()
 
-    override suspend fun getFilterAreas(): Resource<List<FilterArea>> = filterRepository.getFilterAreas()
+    override suspend fun getFilterRegions(countryId: Int?): Resource<List<FilterArea>> =
+        filterRepository.getFilterRegions(countryId)
 
     override suspend fun getFilterIndustries(): Resource<List<FilterIndustry>> = filterRepository.getFilterIndustries()
 }
