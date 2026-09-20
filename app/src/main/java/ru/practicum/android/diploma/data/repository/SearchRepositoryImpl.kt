@@ -6,9 +6,6 @@ import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
-import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.BAD_REQUEST_ERROR_CODE
-import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.NO_CONNECTION_ERROR_CODE
-import ru.practicum.android.diploma.data.network.RetrofitNetworkClient.Companion.OK_CODE
 import ru.practicum.android.diploma.domain.api.SearchRepository
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.VacanciesSearchResult
@@ -29,8 +26,8 @@ class SearchRepositoryImpl(
         val request = VacancySearchRequest(
             expression = expression,
             page = page,
-            area = filter?.area,
-            industry = filter?.industry,
+            area = filter?.area?.region?.regionId ?: filter?.area?.country?.countryId,
+            industry = filter?.industry?.industryId,
             salary = filter?.salary,
             onlyWithSalary = filter?.onlyWithSalary,
         )
@@ -38,9 +35,11 @@ class SearchRepositoryImpl(
         val response = networkClient.doRequest(request)
 
         return when (response.resultCode) {
-            OK_CODE -> Resource.Success(vacancyDomainConverter.toDomain(response as VacancySearchResponse))
-            NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
-            BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
+            NetworkClient.OK_CODE -> Resource.Success(
+                vacancyDomainConverter.toDomain(response as VacancySearchResponse)
+            )
+            NetworkClient.NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
+            NetworkClient.BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
             else -> Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
