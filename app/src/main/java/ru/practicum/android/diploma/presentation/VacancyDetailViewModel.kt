@@ -47,6 +47,7 @@ class VacancyDetailViewModel(
     }
 
     fun onFavoriteButtonClick() {
+        if (_state.value !is VacancyDetailState.Content) return
         val isFavorite = (_state.value as VacancyDetailState.Content).vacancy.isFavorite
         _state.value =
             VacancyDetailState.Content(
