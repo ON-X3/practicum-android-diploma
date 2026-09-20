@@ -3,16 +3,13 @@ package ru.practicum.android.diploma.data.converters
 import ru.practicum.android.diploma.data.db.entity.VacancyDetailEntity
 import ru.practicum.android.diploma.data.dto.AddressDTO
 import ru.practicum.android.diploma.data.dto.AreaDTO
-import ru.practicum.android.diploma.data.dto.ContactsDTO
 import ru.practicum.android.diploma.data.dto.EmployerDTO
 import ru.practicum.android.diploma.data.dto.IdNameDTO
 import ru.practicum.android.diploma.data.dto.SalaryDTO
 import ru.practicum.android.diploma.data.dto.VacancyDetailDTO
-import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.domain.models.Employer
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 import ru.practicum.android.diploma.domain.models.VacancySalary
-
 
 class VacancyDetailConverter {
 
@@ -113,13 +110,6 @@ class VacancyDetailConverter {
     private fun EmployerDTO?.name(): String = this?.name.orEmpty()
 
     private fun EmployerDTO?.logo(): String = this?.logo.orEmpty()
-
-    private fun ContactsDTO?.contactName(): String = this?.name.orEmpty()
-
-    private fun ContactsDTO?.contactEmail(): String = this?.email.orEmpty()
-
-    private fun ContactsDTO?.phones(): List<String> =
-        this?.phones.orEmpty().mapNotNull { it.formatted }
 
     private fun VacancyDetailEntity.toDomainSalary(): VacancySalary? {
         if (salaryFrom == null && salaryTo == null && salaryCurrency == null) return null

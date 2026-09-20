@@ -4,5 +4,4 @@ class SalaryDTO(
     val from: Int?,
     val to: Int?,
     val currency: String?
-) {
-}
+)
