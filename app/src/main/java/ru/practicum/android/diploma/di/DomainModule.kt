@@ -4,9 +4,9 @@ import org.koin.dsl.module
 import ru.practicum.android.diploma.domain.api.FavoritesInteractor
 import ru.practicum.android.diploma.domain.api.FilterInteractor
 import ru.practicum.android.diploma.domain.api.SearchInteractor
+import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.impl.FavoritesInteractorImpl
 import ru.practicum.android.diploma.domain.impl.FilterInteractorImpl
-import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.impl.SearchInteractorImpl
 import ru.practicum.android.diploma.domain.impl.VacancyInteractorImpl
 

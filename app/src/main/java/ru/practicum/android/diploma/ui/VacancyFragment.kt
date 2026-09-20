@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 
 class VacancyFragment : Fragment() {
