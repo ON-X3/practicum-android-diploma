@@ -58,6 +58,7 @@ class SearchRepositoryImpl(
                     Resource.Success(vacancyDetailConverter.toDomain(dto))
                 }
             }
+            NetworkClient.NOT_FOUND -> Resource.Error(ErrorCode.NOT_FOUND)
             NetworkClient.NO_CONNECTION_ERROR_CODE -> Resource.Error(ErrorCode.NO_INTERNET_CONNECTION)
             NetworkClient.BAD_REQUEST_ERROR_CODE -> Resource.Error(ErrorCode.BAD_REQUEST)
             else -> Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)

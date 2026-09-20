@@ -21,11 +21,13 @@ import ru.practicum.android.diploma.data.network.SearchApi
 import ru.practicum.android.diploma.data.repository.FavoritesRepositoryImpl
 import ru.practicum.android.diploma.data.repository.FilterRepositoryImpl
 import ru.practicum.android.diploma.data.repository.SearchRepositoryImpl
+import ru.practicum.android.diploma.data.repository.SharingRepositoryImpl
 import ru.practicum.android.diploma.data.storage.SharedPreferences
 import ru.practicum.android.diploma.data.storage.StorageClient
 import ru.practicum.android.diploma.domain.api.FavoritesRepository
 import ru.practicum.android.diploma.domain.api.FilterRepository
 import ru.practicum.android.diploma.domain.api.SearchRepository
+import ru.practicum.android.diploma.domain.api.SharingRepository
 import ru.practicum.android.diploma.domain.models.FilterParameters
 
 val dataModule = module {
@@ -73,4 +75,5 @@ val dataModule = module {
         )
     }
     single<FavoritesRepository> { FavoritesRepositoryImpl(get(), get(), get()) }
+    factory<SharingRepository> { SharingRepositoryImpl(get()) }
 }
