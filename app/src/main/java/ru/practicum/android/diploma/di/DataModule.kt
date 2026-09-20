@@ -18,13 +18,13 @@ import ru.practicum.android.diploma.data.network.AuthInterceptor
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.data.network.SearchApi
-import ru.practicum.android.diploma.data.repository.FilterRepositoryImpl
 import ru.practicum.android.diploma.data.repository.FavoritesRepositoryImpl
+import ru.practicum.android.diploma.data.repository.FilterRepositoryImpl
 import ru.practicum.android.diploma.data.repository.SearchRepositoryImpl
 import ru.practicum.android.diploma.data.storage.SharedPreferences
 import ru.practicum.android.diploma.data.storage.StorageClient
-import ru.practicum.android.diploma.domain.api.FilterRepository
 import ru.practicum.android.diploma.domain.api.FavoritesRepository
+import ru.practicum.android.diploma.domain.api.FilterRepository
 import ru.practicum.android.diploma.domain.api.SearchRepository
 import ru.practicum.android.diploma.domain.models.FilterParameters
 
@@ -56,7 +56,7 @@ val dataModule = module {
     single { VacancyDomainConverter() }
     single { VacancyCardConverter() }
     single { VacancyDetailConverter() }
-    single<SearchRepository> { SearchRepositoryImpl(get(), get()) }
+    single<SearchRepository> { SearchRepositoryImpl(get(), get(), get()) }
     single<StorageClient> {
         SharedPreferences(
             get(),

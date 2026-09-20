@@ -47,6 +47,6 @@ class VacancyDetailViewModel(
     fun shareVacancy() {
         val vacancy = requestState.value
         if (vacancy !is VacancyDetailState.Content) return
-        sharingInteractor.shareVacancy(vacancy.vacancy.sharingUrl)
+        sharingInteractor.shareVacancy(vacancy.vacancy.url)
     }
 }

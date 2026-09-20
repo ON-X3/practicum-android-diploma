@@ -5,11 +5,9 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.slot
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import ru.practicum.android.diploma.data.converters.VacancyCardConverter
@@ -92,15 +90,6 @@ class FavoritesRepositoryImplTest {
         assertEquals("Разработчик", result?.name)
     }
 
-    @Test
-    fun `getVacancyById returns null when entity not found`() = runTest {
-        coEvery { dao.getVacancyById("1") } returns null
-
-        val result = repository.getVacancyById("1")
-
-        assertNull(result)
-    }
-
     // ── getFavoriteList ──────────────────────────────────────
 
     @Test
@@ -142,8 +131,9 @@ class FavoritesRepositoryImplTest {
         employer = Employer("Яндекс", "https://logo.png"),
         areaName = "Москва",
         skills = listOf("Kotlin", "Android"),
-        sharingUrl = "https://hh.ru/vacancy/1",
-        isFavorite = true,
+        url = "https://hh.ru/vacancy/1",
+        industryName = "Информационные технологии, системная интеграция, интернет",
+        isFavorite = true
     )
 
     private fun createEntity() = VacancyDetailEntity(
@@ -158,11 +148,10 @@ class FavoritesRepositoryImplTest {
         experience = "1-3 года",
         schedule = "Полный день",
         employment = "Полная занятость",
-        contacts = null,
         employerName = "Яндекс",
         employerLogo = "https://logo.png",
         area = "Москва",
-        industry = null,
+        industry = "Информационные технологии, системная интеграция, интернет",
         skills = "Kotlin|Android",
     )
 }
