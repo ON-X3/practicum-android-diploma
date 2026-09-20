@@ -33,7 +33,7 @@ class VacancyDetailConverter {
             skills = vacancy.skills.joinToString(separator = "|"),
         )
 
-    fun toDomain(dto: VacancyDetailDTO): VacancyDetail {
+    fun toDomain(dto: VacancyDetailDTO, isFavorite: Boolean): VacancyDetail {
         return VacancyDetail(
             id = dto.id,
             name = dto.name,
@@ -48,7 +48,7 @@ class VacancyDetailConverter {
             industryName = dto.industry.name(),
             skills = dto.skills.orEmpty(),
             url = dto.url.orEmpty(),
-            isFavorite = false
+            isFavorite = isFavorite
         )
     }
 
