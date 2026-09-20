@@ -1,9 +1,11 @@
 package ru.practicum.android.diploma.data.network
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.practicum.android.diploma.data.dto.AreaDTO
 import ru.practicum.android.diploma.data.dto.IndustryDTO
+import ru.practicum.android.diploma.data.dto.VacancyDetailDTO
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
 interface SearchApi {
@@ -16,6 +18,9 @@ interface SearchApi {
         @Query("salary") salary: Int? = null,
         @Query("only_with_salary") onlyWithSalary: Boolean? = null,
     ): VacancySearchResponse
+
+    @GET("vacancies/{vacancyId}")
+    suspend fun getVacancyDetails(@Path("vacancyId")vacancyId: String): VacancyDetailDTO
 
     @GET("areas")
     suspend fun getFilterAreas(): List<AreaDTO>

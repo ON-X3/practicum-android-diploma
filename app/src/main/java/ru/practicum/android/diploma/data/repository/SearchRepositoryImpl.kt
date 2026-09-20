@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.data.repository
 
 import ru.practicum.android.diploma.data.converters.VacancyDetailConverter
 import ru.practicum.android.diploma.data.converters.VacancyDomainConverter
+import ru.practicum.android.diploma.data.dto.VacancyDetailRequest
 import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
@@ -45,12 +46,12 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun getVacancyDetail(id: String): Resource<VacancyDetail> {
-        val request = id
+        val request = VacancyDetailRequest(id)
         val response = networkClient.doRequest(request)
 
         return when (response.resultCode) {
             NetworkClient.OK_CODE -> {
-                val dto = (response as? VacancyDetailResponse)?.items
+                val dto = (response as? VacancyDetailResponse)?.vacancy
                 if (dto == null) {
                     Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
                 } else {

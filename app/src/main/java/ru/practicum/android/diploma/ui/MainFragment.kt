@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +15,17 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent.get
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
+import ru.practicum.android.diploma.domain.api.SearchInteractor
 import ru.practicum.android.diploma.domain.models.VacancyCard
 import ru.practicum.android.diploma.domain.util.ErrorCode
 import ru.practicum.android.diploma.presentation.SearchStateUi
@@ -96,6 +102,12 @@ class MainFragment : Fragment() {
                 }
             }
         )
+
+        val inter: SearchInteractor = get()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val details = inter.getVacancyDetail("0008f0fb-491f-3789-8de1-49cb412b1f2a")
+            Log.d("detail", details.data.toString())
+        }
     }
 
     override fun onDestroyView() {

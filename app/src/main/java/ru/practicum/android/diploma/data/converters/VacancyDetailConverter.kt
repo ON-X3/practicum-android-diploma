@@ -36,9 +36,6 @@ class VacancyDetailConverter {
             skills = vacancy.skills.joinToString(separator = "|"),
         )
 
-    fun toDomain(response: VacancyDetailResponse): VacancyDetail =
-        toDomain(response.items)
-
     fun toDomain(dto: VacancyDetailDTO): VacancyDetail {
         return VacancyDetail(
             id = dto.id,
