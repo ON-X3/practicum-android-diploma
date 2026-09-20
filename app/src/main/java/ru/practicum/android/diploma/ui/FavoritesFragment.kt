@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoritesBinding
 import ru.practicum.android.diploma.domain.models.VacancyCard
 
 class FavoritesFragment : Fragment() {
 
+    private val viewModel: FavoritesViewModel by viewModel()
     private var _adapter: VacancyCardAdapter? = null
     private val adapter get() = _adapter!!
 
@@ -33,7 +36,33 @@ class FavoritesFragment : Fragment() {
             onVacancyCardClick(vacancyCard)
         }
         binding.favoritesList.adapter = adapter
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            render(state)
+        }
+        viewModel.getFavorites()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getFavorites()
+    }
+
+    private fun render(state: FavoritesScreenState) {
+        when (state) {
+            is FavoritesScreenState.Loading -> {
+                binding.favoritesList.isVisible = false
+            }
+            is FavoritesScreenState.Empty -> {
+                binding.favoritesList.isVisible = false
+            }
+            is FavoritesScreenState.Content -> {
+                binding.favoritesList.isVisible = true
+                addVacanciesToList(state.vacancies)
+            }
+            is FavoritesScreenState.Error -> {
+                binding.favoritesList.isVisible = false
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -43,8 +72,8 @@ class FavoritesFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun addVacanciesToList(vacancies: List<VacancyCard>, hasNextPage: Boolean) {
-        adapter.addVacancies(vacancies, hasNextPage)
+    private fun addVacanciesToList(vacancies: List<VacancyCard>) {
+        adapter.updateVacancies(vacancies)
     }
 
     private fun onVacancyCardClick(vacancyCard: VacancyCard) {
