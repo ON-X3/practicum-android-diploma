@@ -2,6 +2,8 @@ package ru.practicum.android.diploma.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import ru.practicum.android.diploma.data.converters.DatabaseConverters
 import ru.practicum.android.diploma.data.db.dao.AreaDao
 import ru.practicum.android.diploma.data.db.dao.IndustryDao
 import ru.practicum.android.diploma.data.db.dao.VacancyDetailDao
@@ -18,6 +20,7 @@ import ru.practicum.android.diploma.data.db.entity.VacancyListEntity
         VacancyDetailEntity::class,
         VacancyListEntity::class]
 )
+@TypeConverters(DatabaseConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun areaDao(): AreaDao
     abstract fun industryDao(): IndustryDao
