@@ -98,6 +98,11 @@ class VacancyFragment : Fragment() {
                 }
             }
         }
+        binding.apply {
+            content.isVisible = false
+            placeholder.isVisible = true
+            progressBar.isVisible = false
+        }
 
     }
 

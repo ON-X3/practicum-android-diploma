@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        style="@style/TextAppearanceMedium22"
+        android:textAppearance="@style/TextAppearanceMedium22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin16dp"
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_server_error_vc" />
+            android:adjustViewBounds="true"/>
 
         <TextView
             android:id="@+id/placeholderText"
@@ -93,6 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="16dp"
+            android:gravity="center"
             android:text="@string/server_error"
             android:textAppearance="@style/TextAppearanceMedium22"
             android:textColor="@color/ypBlack" />
@@ -125,7 +126,7 @@
 
             <TextView
                 android:id="@+id/salary"
-                style="@style/TextAppearanceMedium22"
+                android:textAppearance="@style/TextAppearanceMedium22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/micro_padding"
@@ -167,7 +168,7 @@
 
                     <TextView
                         android:id="@+id/companyName"
-                        style="@style/TextAppearanceMedium22"
+                        android:textAppearance="@style/TextAppearanceMedium22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/uniBlack"
@@ -175,7 +176,7 @@
 
                     <TextView
                         android:id="@+id/address"
-                        style="@style/TextAppearanceRegular16"
+                        android:textAppearance="@style/TextAppearanceRegular16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/uniBlack"
@@ -185,7 +186,7 @@
 
             <TextView
                 android:id="@+id/requiredExperience"
-                style="@style/TextAppearanceMedium22"
+                android:textAppearance="@style/TextAppearanceMedium22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin16dp"
@@ -197,7 +198,7 @@
 
             <TextView
                 android:id="@+id/experience"
-                style="@style/TextAppearanceRegular16"
+                android:textAppearance="@style/TextAppearanceRegular16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/basic_padding"
@@ -208,7 +209,7 @@
 
             <TextView
                 android:id="@+id/employmentAndSchedule"
-                style="@style/TextAppearanceRegular16"
+                android:textAppearance="@style/TextAppearanceRegular16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/basic_padding"
