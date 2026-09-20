@@ -18,17 +18,19 @@ class FavoritesViewModel(
     fun getFavorites() {
         _state.value = FavoritesScreenState.Loading
         viewModelScope.launch {
-            when (val result = favoritesInteractor.getFavoriteList()) {
-                is Resource.Success -> {
-                    val list = result.data.orEmpty()
-                    if (list.isEmpty()) {
-                        _state.postValue(FavoritesScreenState.Empty)
-                    } else {
-                        _state.postValue(FavoritesScreenState.Content(list))
+            favoritesInteractor.getFavoriteList().collect {
+                when (it) {
+                    is Resource.Success -> {
+                        val list = it.data.orEmpty()
+                        if (list.isEmpty()) {
+                            _state.value = FavoritesScreenState.Empty
+                        } else {
+                            _state.value = FavoritesScreenState.Content(list)
+                        }
                     }
-                }
-                is Resource.Error -> {
-                    _state.postValue(FavoritesScreenState.Error)
+                    is Resource.Error -> {
+                        _state.value = FavoritesScreenState.Error
+                    }
                 }
             }
         }
