@@ -12,6 +12,40 @@
         style="@style/ToolbarStyle"
         app:title="@string/favorites" />
 
+    <LinearLayout
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/basic_padding"
+
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/placeholderImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            tools:src="@drawable/il_empty_list"/>
+
+        <TextView
+            android:id="@+id/placeholderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            tools:text="@string/list_is_empty"
+            android:textAppearance="@style/TextAppearanceMedium22"
+            android:textColor="@color/ypBlack" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesList"
         android:layout_marginTop="@dimen/basic_padding"
@@ -22,5 +56,6 @@
         tools:listitem="@layout/vacancy_card_item"
         tools:itemCount="2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:visibility="gone"
         />
 </LinearLayout>

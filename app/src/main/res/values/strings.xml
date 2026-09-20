@@ -20,4 +20,5 @@
     <string name="error_toast_message">Произошла ошибка</string>
     <string name="key_skills">Ключевые навыки</string>
     <string name="not_found_404_placeholder_text">Вакансия не найдена или удалена</string>
+    <string name="list_is_empty">Список пуст</string>
 </resources>
