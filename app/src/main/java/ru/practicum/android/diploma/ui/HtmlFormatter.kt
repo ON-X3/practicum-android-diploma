@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.text.Editable
 import android.text.Html
+import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextPaint
 import android.text.style.LeadingMarginSpan
@@ -29,7 +30,7 @@ class HtmlFormatter(private val context: Context) {
         customTagString = "<div>$customTagString</div>"
         Log.d("HTML", customTagString)
         val spanned = Html.fromHtml(customTagString, Html.FROM_HTML_MODE_COMPACT, null, CustomTagHandler(context))
-        return spanned
+        return SpannableStringBuilder(spanned).delete(spanned.length-1, spanned.length)
     }
 }
 

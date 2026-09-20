@@ -45,6 +45,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <FrameLayout
+        android:id="@+id/progressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin20dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backButton">
+
+        <ProgressBar
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue"
+
+            />
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
@@ -70,6 +91,7 @@
             android:id="@+id/placeholderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
             android:layout_marginTop="16dp"
             android:text="@string/server_error"
             android:textAppearance="@style/TextAppearanceMedium22"
@@ -77,6 +99,7 @@
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin36dp"
@@ -89,9 +112,9 @@
 
             <TextView
                 android:id="@+id/vacancyName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin16dp"
+                android:layout_marginHorizontal="@dimen/margin16dp"
                 android:layout_marginTop="@dimen/margin8dp"
                 android:fontFamily="@font/ys_display_bold"
                 android:textColor="@color/ypBlack"
@@ -103,10 +126,11 @@
             <TextView
                 android:id="@+id/salary"
                 style="@style/TextAppearanceMedium22"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/micro_padding"
-                app:layout_constraintStart_toStartOf="@id/vacancyName"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vacancyName"
                 tools:text="от 100 000 ₽" />
 
@@ -128,7 +152,6 @@
                     android:layout_width="@dimen/company_logo_size"
                     android:layout_height="@dimen/company_logo_size"
 
-                    android:background="@color/white"
                     android:padding="@dimen/company_logo_stoke_width"
                     android:scaleType="centerInside"
                     app:shapeAppearanceOverlay="@style/logo_image"
@@ -151,7 +174,7 @@
                         tools:text="Еда" />
 
                     <TextView
-                        android:id="@+id/city"
+                        android:id="@+id/address"
                         style="@style/TextAppearanceRegular16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -163,9 +186,9 @@
             <TextView
                 android:id="@+id/requiredExperience"
                 style="@style/TextAppearanceMedium22"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin16dp"
+                android:layout_marginHorizontal="@dimen/margin16dp"
                 android:layout_marginTop="@dimen/large_padding"
                 android:text="@string/required_experience"
                 android:textSize="@dimen/text16Sp"
@@ -177,8 +200,9 @@
                 style="@style/TextAppearanceRegular16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
                 android:layout_marginTop="@dimen/micro_padding"
-                app:layout_constraintStart_toStartOf="@id/requiredExperience"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/requiredExperience"
                 tools:text="от 1 года до 3 лет" />
 
@@ -187,9 +211,11 @@
                 style="@style/TextAppearanceRegular16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
                 android:layout_marginTop="@dimen/small_padding"
-                app:layout_constraintStart_toStartOf="@id/experience"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/experience"
+                app:layout_goneMarginTop="@dimen/large_padding"
                 tools:text="Полная занятость, Удаленная работа" />
 
             <TextView
@@ -199,6 +225,7 @@
                 android:layout_marginHorizontal="@dimen/margin16dp"
                 android:layout_marginTop="@dimen/margin32dp"
                 android:layout_marginBottom="@dimen/small_padding"
+                android:textAppearance="@style/TextAppearanceRegular16"
                 android:textColor="@color/ypBlack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -222,6 +249,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/basic_padding"
                 android:layout_marginTop="@dimen/basic_padding"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/skillsHeader"
                 tools:itemCount="5"
