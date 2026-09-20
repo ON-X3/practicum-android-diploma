@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.FavoritesInteractor
 import ru.practicum.android.diploma.domain.api.SearchInteractor
 import ru.practicum.android.diploma.domain.api.SharingInteractor
 import ru.practicum.android.diploma.domain.util.ErrorCode
@@ -13,7 +14,8 @@ import ru.practicum.android.diploma.domain.util.Resource
 class VacancyDetailViewModel(
     private val vacancyId: String,
     private val searchInteractor: SearchInteractor,
-    private val sharingInteractor: SharingInteractor
+    private val sharingInteractor: SharingInteractor,
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
     private val _state = MutableLiveData<VacancyDetailState>()
     val state: LiveData<VacancyDetailState> = _state
@@ -34,12 +36,26 @@ class VacancyDetailViewModel(
                         VacancyDetailState.Error(ErrorCode.INTERNAL_SERVER_ERROR)
                     }
                 }
+
                 is Resource.Error -> {
                     val errorCode = result.errorCode ?: ErrorCode.INTERNAL_SERVER_ERROR
                     _state.value = VacancyDetailState.Error(errorCode)
                 }
             }
 
+        }
+    }
+
+    fun onFavoriteButtonClick() {
+        val isFavorite = (_state.value as VacancyDetailState.Content).vacancy.isFavorite
+        _state.value =
+            VacancyDetailState.Content((_state.value as VacancyDetailState.Content).vacancy.copy(isFavorite = !isFavorite))
+        viewModelScope.launch {
+            if (isFavorite) {
+                favoritesInteractor.deleteFromFavoriteById(vacancyId)
+            } else {
+                favoritesInteractor.addToFavorite((_state.value as VacancyDetailState.Content).vacancy)
+            }
         }
     }
 
