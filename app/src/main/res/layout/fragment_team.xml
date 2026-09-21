@@ -21,7 +21,9 @@
         android:paddingTop="8dp"
         android:paddingStart="16dp"
         />
+
     <TextView
+        android:id="@+id/teamText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ys_display_medium"
@@ -31,13 +33,5 @@
         android:textColor="@color/ypBlack"
         android:paddingTop="24dp"
         android:paddingStart="16dp"/>
-    <!-- кнопка для тестирования, перед мержем будет удалена -->
-    <Button
-        android:id="@+id/testButton"
-        android:layout_marginTop="@dimen/large_padding"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="на экран регионов"/>
 
 </LinearLayout>

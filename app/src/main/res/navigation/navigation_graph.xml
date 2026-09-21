@@ -30,12 +30,7 @@
         android:id="@+id/teamFragment"
         android:name="ru.practicum.android.diploma.ui.TeamFragment"
         android:label="fragment_team"
-        tools:layout="@layout/fragment_team" >
-        <!-- Переход для тестирования -->
-        <action
-            android:id="@+id/action_teamFragment_to_regionFragment"
-            app:destination="@id/regionFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_team" />
     <fragment
         android:id="@+id/filtersFragment"
         android:name="ru.practicum.android.diploma.ui.FiltersFragment"
