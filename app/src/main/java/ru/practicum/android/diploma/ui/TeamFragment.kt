@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 
 // Rename parameter arguments, choose names that match
@@ -37,6 +39,14 @@ class TeamFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_team, container, false)
+    }
+
+    // Будет удален после ревью
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val teamText: TextView = view.findViewById(R.id.teamText)
+        teamText.setOnClickListener {
+            findNavController().navigate(R.id.action_teamFragment_to_industryFragment)
+        }
     }
 
     companion object {

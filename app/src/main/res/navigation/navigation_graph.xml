@@ -30,7 +30,11 @@
         android:id="@+id/teamFragment"
         android:name="ru.practicum.android.diploma.ui.TeamFragment"
         android:label="fragment_team"
-        tools:layout="@layout/fragment_team" />
+        tools:layout="@layout/fragment_team" >
+        <action
+            android:id="@+id/action_teamFragment_to_industryFragment"
+            app:destination="@id/industryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/filtersFragment"
         android:name="ru.practicum.android.diploma.ui.FiltersFragment"
