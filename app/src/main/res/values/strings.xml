@@ -18,5 +18,7 @@
     <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
     <string name="no_internet_toast_message">Проверьте подключение к интернету</string>
     <string name="error_toast_message">Произошла ошибка</string>
+    <string name="choosing_country">Выбор страны</string>
+    <string name="countries_error">Не удалось получить\nсписок стран</string>
 
 </resources>
