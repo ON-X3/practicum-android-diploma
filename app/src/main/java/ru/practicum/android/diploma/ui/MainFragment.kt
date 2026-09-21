@@ -110,8 +110,8 @@ class MainFragment : Fragment() {
             render(it)
         }
 
-        viewModel.observeIsFilterActive().observe(viewLifecycleOwner) {
-            renderFilter(it)
+        viewModel.observeIsFilterActiveAndChanged().observe(viewLifecycleOwner) {
+            renderFilter(it.first, it.second)
         }
 
         viewModel.errorToast().observe(viewLifecycleOwner) {
@@ -163,7 +163,10 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun renderFilter(isActive: Boolean) {
+    private fun renderFilter(isActive: Boolean, isChanged: Boolean) {
+        if (isChanged) {
+            binding.vacanciesList.scrollToPosition(0)
+        }
         if (isActive) {
             binding.addFilter.apply {
                 imageTintList = ColorStateList.valueOf(requireContext().getColor(R.color.uniWhite))
