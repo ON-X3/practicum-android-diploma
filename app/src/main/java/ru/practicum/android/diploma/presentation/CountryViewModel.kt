@@ -25,7 +25,7 @@ class CountryViewModel(val filterInteractor: FilterInteractor, val appScope: Cor
                 is Resource.Success -> {
                     countryStateUiLiveData.value = CountryStateUi.Content(result.data!!)
                 }
-                
+
                 is Resource.Error -> countryStateUiLiveData.value = CountryStateUi.Error
             }
         }
