@@ -7,6 +7,7 @@
     <dimen name="height0dp">0dp</dimen>
     <dimen name="height48dp">48dp</dimen>
     <dimen name="height56dp">56dp</dimen>
+    <dimen name="height60dp">60dp</dimen>
     <dimen name="height61dp">61dp</dimen>
     <dimen name="height64dp">64dp</dimen>
     <dimen name="height80dp">80dp</dimen>
@@ -35,4 +36,5 @@
     <dimen name="company_logo_corner_radius">12dp</dimen>
     <dimen name="company_logo_stoke_width">1dp</dimen>
     <dimen name="progress_bar_size">36dp</dimen>
+    <dimen name="filter_area_item_vertical_padding">14.5dp</dimen>
 </resources>
