@@ -5,7 +5,6 @@ import ru.practicum.android.diploma.domain.api.FilterInteractor
 import ru.practicum.android.diploma.domain.api.FilterRepository
 import ru.practicum.android.diploma.domain.models.FilterArea
 import ru.practicum.android.diploma.domain.models.FilterAreaDetails
-import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.util.Resource
@@ -37,5 +36,5 @@ class FilterInteractorImpl(private val filterRepository: FilterRepository) : Fil
     override suspend fun getFilterRegions(countryId: Int?): Resource<List<FilterArea>> =
         filterRepository.getFilterRegions(countryId)
 
-    override suspend fun getFilterIndustries(): Resource<List<FilterIndustry>> = filterRepository.getFilterIndustries()
+    override suspend fun getFilterIndustries(): Resource<List<Industry>> = filterRepository.getFilterIndustries()
 }

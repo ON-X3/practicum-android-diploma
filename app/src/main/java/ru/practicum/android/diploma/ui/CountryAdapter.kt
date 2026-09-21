@@ -15,7 +15,7 @@ class CountryAdapter(
         position: Int
     ) {
         holder.bind(countriesList[position])
-        
+
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(countriesList[position])
         }

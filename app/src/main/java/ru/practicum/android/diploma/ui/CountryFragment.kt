@@ -46,7 +46,7 @@ class CountryFragment : Fragment() {
             renderUiState(it)
         }
     }
-    private fun setListeners(){
+    private fun setListeners() {
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
     }
     private fun renderUiState(state: CountryStateUi) {
@@ -56,21 +56,21 @@ class CountryFragment : Fragment() {
             is CountryStateUi.Content -> showContent(state.countries)
         }
     }
-    private fun showLoading(){
+    private fun showLoading() {
         binding.apply {
             progressBar.isVisible = true
             countriesRecyclerView.isVisible = false
             countriesError.isVisible = false
         }
     }
-    private fun showError(){
+    private fun showError() {
         binding.apply {
             progressBar.isVisible = false
             countriesRecyclerView.isVisible = false
             countriesError.isVisible = true
         }
     }
-    private fun showContent(countries: List<FilterArea>){
+    private fun showContent(countries: List<FilterArea>) {
         binding.apply {
             countryAdapter.updateCountriesList(countries)
             progressBar.isVisible = false
