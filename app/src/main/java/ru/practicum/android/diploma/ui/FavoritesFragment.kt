@@ -11,6 +11,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoritesBinding
 import ru.practicum.android.diploma.domain.models.VacancyCard
+import ru.practicum.android.diploma.presentation.FavoritesScreenState
+import ru.practicum.android.diploma.presentation.FavoritesViewModel
 
 class FavoritesFragment : Fragment() {
 
@@ -39,28 +41,46 @@ class FavoritesFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
-        viewModel.getFavorites()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getFavorites()
     }
 
     private fun render(state: FavoritesScreenState) {
         when (state) {
             is FavoritesScreenState.Loading -> {
-                binding.favoritesList.isVisible = false
+                binding.apply {
+                    favoritesList.isVisible = false
+                    placeholder.isVisible = false
+                    progressBar.isVisible = true
+                }
+
             }
             is FavoritesScreenState.Empty -> {
-                binding.favoritesList.isVisible = false
+                binding.apply {
+                    placeholderImage.setImageResource(R.drawable.il_empty_list)
+                    placeholderText.setText(R.string.list_is_empty)
+                    favoritesList.isVisible = false
+                    placeholder.isVisible = true
+                    progressBar.isVisible = false
+                }
+
             }
             is FavoritesScreenState.Content -> {
-                binding.favoritesList.isVisible = true
                 addVacanciesToList(state.vacancies)
+                binding.apply {
+                    favoritesList.isVisible = true
+                    binding.placeholder.isVisible = false
+                    progressBar.isVisible = false
+                }
+
             }
+
             is FavoritesScreenState.Error -> {
-                binding.favoritesList.isVisible = false
+                binding.apply {
+                    placeholderImage.setImageResource(R.drawable.ic_nothing_found)
+                    placeholderText.setText(R.string.nothing_found)
+                    favoritesList.isVisible = false
+                    placeholder.isVisible = true
+                    progressBar.isVisible = false
+                }
             }
         }
     }

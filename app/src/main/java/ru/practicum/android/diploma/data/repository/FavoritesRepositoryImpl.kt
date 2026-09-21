@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.data.repository
 
+import android.util.Log
+import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -29,8 +31,13 @@ class FavoritesRepositoryImpl(
         return vacancyDetailDao.isFavorite(id)
     }
 
-    override suspend fun getVacancyById(id: String): VacancyDetail? {
-        return vacancyDetailConverter.toDomain(vacancyDetailDao.getVacancyById(id))
+    override suspend fun getVacancyById(id: String): Resource<VacancyDetail> {
+        return try {
+            Resource.Success(vacancyDetailConverter.toDomain(vacancyDetailDao.getVacancyById(id)))
+        } catch (e: SQLiteException) {
+            Log.e("db", e.toString())
+            Resource.Error(ErrorCode.LOCAL_DB_ERROR)
+        }
     }
 
     override fun getFavoriteList(): Flow<Resource<List<VacancyCard>>> =

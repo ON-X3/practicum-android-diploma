@@ -18,14 +18,6 @@ class FavoritesInteractorImpl(
         repository.deleteFromFavoriteById(id)
     }
 
-    override suspend fun isFavorite(id: String): Boolean {
-        return repository.isFavorite(id)
-    }
-
-    override suspend fun getVacancyById(id: String): VacancyDetail? {
-        return repository.getVacancyById(id)
-    }
-
     override suspend fun getFavoriteList(): Flow<Resource<List<VacancyCard>>> {
         return repository.getFavoriteList()
     }

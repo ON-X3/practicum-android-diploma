@@ -72,6 +72,9 @@ class VacancyFragment : Fragment() {
             sharingButton.setOnClickListener {
                 viewModel.shareVacancy()
             }
+            favoriteButton.setOnClickListener {
+                viewModel.onFavoriteButtonClick()
+            }
         }
     }
 

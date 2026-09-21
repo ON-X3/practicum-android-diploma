@@ -58,7 +58,7 @@ val dataModule = module {
     single { VacancyDomainConverter() }
     single { VacancyCardConverter() }
     single { VacancyDetailConverter() }
-    single<SearchRepository> { SearchRepositoryImpl(get(), get(), get()) }
+    single<SearchRepository> { SearchRepositoryImpl(get(), get(), get(), get()) }
     single<StorageClient> {
         SharedPreferences(
             get(),

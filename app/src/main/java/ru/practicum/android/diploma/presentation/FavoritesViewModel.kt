@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui
+package ru.practicum.android.diploma.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +15,11 @@ class FavoritesViewModel(
     private val _state = MutableLiveData<FavoritesScreenState>()
     val state: LiveData<FavoritesScreenState> = _state
 
-    fun getFavorites() {
+    init {
+        getFavorites()
+    }
+
+    private fun getFavorites() {
         _state.value = FavoritesScreenState.Loading
         viewModelScope.launch {
             favoritesInteractor.getFavoriteList().collect {
