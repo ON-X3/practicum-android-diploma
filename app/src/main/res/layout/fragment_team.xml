@@ -27,11 +27,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ys_display_medium"
-        android:lineHeight="24sp"
-        android:paddingStart="16dp"
-        android:paddingTop="24dp"
+        android:textSize="16sp"
         android:text="@string/bestDevelopers"
+        android:lineHeight="24sp"
         android:textColor="@color/ypBlack"
-        android:textSize="16sp" />
+        android:paddingTop="24dp"
+        android:paddingStart="16dp"/>
 
 </LinearLayout>
