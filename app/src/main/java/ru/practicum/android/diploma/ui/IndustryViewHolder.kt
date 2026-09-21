@@ -17,6 +17,7 @@ class IndustryViewHolder(itemView: View, private val onClick: (Industry) -> Unit
         name.text = item.industryName
         radioButton.isChecked = isSelected
         radioButton.setOnClickListener { onClick(item) }
+        itemView.setOnClickListener { onClick(item) }
     }
 }
 
