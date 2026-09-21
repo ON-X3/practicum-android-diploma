@@ -1,11 +1,10 @@
-package ru.practicum.android.diploma.ui.root
+package ru.practicum.android.diploma.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.Industry
-
 
 class IndustryAdapter(
     private val onClick: (Industry) -> Unit

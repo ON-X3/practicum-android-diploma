@@ -62,7 +62,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="14dp"
-        tools:itemCount="5"
+        tools:itemCount="15"
         tools:listitem="@layout/industry_item" />
 
     <LinearLayout

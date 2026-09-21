@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root
+package ru.practicum.android.diploma.ui
 
 import android.view.View
 import android.widget.RadioButton
@@ -16,7 +16,7 @@ class IndustryViewHolder(itemView: View, private val onClick: (Industry) -> Unit
     fun bind(item: Industry, isSelected: Boolean) {
         name.text = item.industryName
         radioButton.isChecked = isSelected
-        itemView.setOnClickListener { onClick(item) }
+        radioButton.setOnClickListener { onClick(item) }
     }
 }
 

@@ -22,7 +22,6 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
 import ru.practicum.android.diploma.presentation.IndustryState
 import ru.practicum.android.diploma.presentation.IndustryViewModel
-import ru.practicum.android.diploma.ui.root.IndustryAdapter
 
 class IndustryFragment : Fragment() {
 
@@ -34,7 +33,7 @@ class IndustryFragment : Fragment() {
     private val adapter: IndustryAdapter = IndustryAdapter { industry ->
         viewModel.onIndustrySelected(industry)
         adapter.setSelected(industry.industryId)
-        binding.btnChoice.isVisible = viewModel.selectedId != null
+        updateButtonVisibility()
     }
 
     override fun onCreateView(
@@ -114,7 +113,6 @@ class IndustryFragment : Fragment() {
     }
 
     private fun setupButton() = with(binding) {
-        btnChoice.isVisible = viewModel.selectedId != null
         btnChoice.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val saved = viewModel.applySelection()
@@ -147,13 +145,16 @@ class IndustryFragment : Fragment() {
             IndustryState.Loading -> progressBar.isVisible = true
             is IndustryState.Content -> {
                 industryRecycleView.isVisible = true
-                adapter.submitList(state.industries) {
-                    adapter.setSelected(viewModel.selectedId)
-                    btnChoice.isVisible = viewModel.selectedId != null
-                }
+                adapter.submitList(state.industries)
+                adapter.setSelected(viewModel.selectedId)
+                updateButtonVisibility()
             }
             IndustryState.Empty -> notFoundErrorLinear.isVisible = true
             IndustryState.Error -> serverErrorLinear.isVisible = true
         }
+    }
+
+    private fun updateButtonVisibility() {
+        binding.btnChoice.isVisible = viewModel.selectedId != null
     }
 }
