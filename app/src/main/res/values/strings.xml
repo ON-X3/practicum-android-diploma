@@ -20,4 +20,8 @@
     <string name="error_toast_message">Произошла ошибка</string>
     <string name="key_skills">Ключевые навыки</string>
     <string name="not_found_404_placeholder_text">Вакансия не найдена или удалена</string>
+    <string name="work_location">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
+    <string name="select">Выбрать</string>
 </resources>
