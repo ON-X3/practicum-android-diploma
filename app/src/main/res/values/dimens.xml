@@ -7,6 +7,7 @@
     <dimen name="height0dp">0dp</dimen>
     <dimen name="height48dp">48dp</dimen>
     <dimen name="height56dp">56dp</dimen>
+    <dimen name="height60dp">60dp</dimen>
     <dimen name="height61dp">61dp</dimen>
     <dimen name="height64dp">64dp</dimen>
     <dimen name="height80dp">80dp</dimen>
