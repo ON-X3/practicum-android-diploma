@@ -8,7 +8,8 @@
     <TextView
         android:id="@+id/nameIndustry"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
         android:gravity="center_vertical"
         android:layout_marginStart="@dimen/margin16dp"
         app:layout_constraintStart_toStartOf="parent"
