@@ -21,7 +21,7 @@ class FiltersViewModel(
     private var shouldUpdateFilterParameters = false
     private val updateSalaryDebouncer = Debouncer<Int?>(SALARY_UPDATING_DELAY, appScope) {salary -> updateSalary(salary)}
     private val filtersLiveData = MutableLiveData<FiltersState>()
-    val filtersStateLiveData: LiveData<FiltersState> = filtersLiveData
+    val filtersStateLiveData : LiveData<FiltersState> = filtersLiveData
 
 
     init {

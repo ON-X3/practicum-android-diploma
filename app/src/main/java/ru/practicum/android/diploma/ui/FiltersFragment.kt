@@ -51,7 +51,7 @@ class FiltersFragment : Fragment() {
             findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
         }
 
-        viewModel.filtersStateLiveData.observe(viewLifecycleOwner){
+        viewModel.filtersStateLiveData.observe(viewLifecycleOwner) {
             render(it)
         }
         binding.hideWithoutSalary.setOnClickListener {
@@ -76,10 +76,10 @@ class FiltersFragment : Fragment() {
 
         val simpleTextWatcher = object : TextWatcher {
             private var isUpdating = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                
+
             }
 
             override fun afterTextChanged(s: Editable?) {
