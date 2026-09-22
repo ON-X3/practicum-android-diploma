@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import ru.practicum.android.diploma.R
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 
@@ -18,7 +18,7 @@ class FiltersFragment : Fragment() {
     private val binding get() = _binding!!
     private var salaryRequest: String = EMPTY_TEXT
     private var hideWOSalary: Boolean = false
-    private val viewModel: FiltersViewModel by viewModels()
+    private val viewModel: FiltersViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,11 +48,16 @@ class FiltersFragment : Fragment() {
             findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
         }
 
+        viewModel.filtersStateLiveData.observe(viewLifecycleOwner){
+            render(it)
+        }
         binding.hideWithoutSalary.setOnClickListener {
             if (!hideWOSalary) {
                 hideWOSalary = true
+                viewModel.updateWithSalary(hideWOSalary)
             } else {
                 hideWOSalary = false
+                viewModel.updateWithSalary(hideWOSalary)
             }
             updateCheckBoxIcon(hideWOSalary)
         }
@@ -87,7 +92,9 @@ class FiltersFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                salaryRequest = s.toString()
+                salaryRequest = s.toString().orEmpty()
+                val salarySum = salaryRequest.toIntOrNull()
+                viewModel.updateSalary(salarySum)
             }
         }
         binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
@@ -105,7 +112,18 @@ class FiltersFragment : Fragment() {
             0,
         )
     }
+    private fun render(state: FiltersViewModel.FiltersState){
+        val area = state.area
+        val industry = state.industry
 
+        if (area != null ) {
+            val areaFilter = "${area.country}, ${area.region}"
+            binding.filterArea.setText(areaFilter)
+        }
+        if (industry != null ) {
+            binding.filterArea.setText(industry.industryName)
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

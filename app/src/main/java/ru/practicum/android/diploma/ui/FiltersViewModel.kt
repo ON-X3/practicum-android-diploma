@@ -15,6 +15,9 @@ class FiltersViewModel(
     private val filtersLiveData = MutableLiveData<FiltersState>()
     val filtersStateLiveData : LiveData<FiltersState> = filtersLiveData
 
+    init {
+        getFiltersCurrentState()
+    }
     fun getFiltersCurrentState(){
         viewModelScope.launch {
             filtersInteractor.getFilterParameters().collect {
@@ -32,12 +35,21 @@ class FiltersViewModel(
 
         }
     }
-
+    fun updateSalary(salary: Int?) {
+        viewModelScope.launch {
+            filtersInteractor.updateSalary(salary)
+        }
+    }
+    fun updateWithSalary(onlyWithSalary: Boolean){
+        viewModelScope.launch {
+            filtersInteractor.updateOnlyWithSalary(onlyWithSalary)
+        }
+    }
     data class FiltersState(
-        val area: FilterAreaDetails?,
-        val industry: Industry?,
-        val salary: Int?,
-        val onlyWithSalary: Boolean
+        val area: FilterAreaDetails? = null,
+        val industry: Industry? = null,
+        val salary: Int? = null,
+        val onlyWithSalary: Boolean = false
     )
 }
 
