@@ -4,58 +4,101 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.databinding.FragmentWorkLocationBinding
 
-// Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [WorkLocationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class WorkLocationFragment : Fragment() {
-    // Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentWorkLocationBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: WorkLocationViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_work_location, container, false)
+    ): View {
+        _binding = FragmentWorkLocationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WorkLocationFragment.
-         */
-        // Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WorkLocationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initListeners()
+        initObservers()
+    }
+
+    private fun initListeners() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+
+        }
+
+        binding.countryContainer.setOnClickListener {
+            findNavController().navigate(R.id.action_workLocationFragment_to_countryFragment)
+        }
+
+        binding.regionContainer.setOnClickListener {
+            findNavController().navigate(R.id.action_workLocationFragment_to_regionFragment)
+        }
+
+        binding.btnSelect.setOnClickListener {
+            viewModel.saveLocation()
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun initObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            renderState(state)
+        }
+    }
+
+    private fun renderState(state: WorkLocationScreenState) {
+        if (state.country.isNullOrBlank()) {
+            binding.countryPlaceholder.isVisible = true
+            binding.countrySelectedContainer.isVisible = false
+            binding.countryActionIcon.setImageResource(R.drawable.ic_arrow_forward)
+            binding.countryActionIcon.setOnClickListener {
+                binding.countryContainer.performClick()
             }
+        } else {
+            binding.countryPlaceholder.isVisible = false
+            binding.countrySelectedContainer.isVisible = true
+            binding.countryValue.text = state.country
+            binding.countryActionIcon.setImageResource(R.drawable.ic_close_24)
+            binding.countryActionIcon.setOnClickListener {
+                viewModel.clearCountry()
+            }
+        }
+
+        if (state.region.isNullOrBlank()) {
+            binding.regionPlaceholder.isVisible = true
+            binding.regionSelectedContainer.isVisible = false
+            binding.regionActionIcon.setImageResource(R.drawable.ic_arrow_forward)
+            binding.regionActionIcon.setOnClickListener {
+                binding.regionContainer.performClick()
+            }
+        } else {
+            binding.regionPlaceholder.isVisible = false
+            binding.regionSelectedContainer.isVisible = true
+            binding.regionValue.text = state.region
+            binding.regionActionIcon.setImageResource(R.drawable.ic_close_24)
+            binding.regionActionIcon.setOnClickListener {
+                viewModel.clearRegion()
+            }
+        }
+
+        binding.btnSelect.isVisible = state.isSelectButtonVisible
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
