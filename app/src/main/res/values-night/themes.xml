@@ -17,9 +17,6 @@
         <item name="hintTextColor">@color/uniWhite</item>
         <!-- Фон строки поиска -->
         <item name="color">@color/gray</item>
-        <!-- Цвет для заливки иконок и кнопок-->
-        <item name="iconTint">@color/uniWhite</item>
-        <item name="backgroundTint">@color/uniBlack</item>
     </style>
 
     <style name="Theme.PracticumAndroidDiploma" parent="Base.Theme.PracticumAndroidDiploma" />
