@@ -5,12 +5,12 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.practicum.android.diploma.presentation.CountryViewModel
 import ru.practicum.android.diploma.presentation.FavoritesViewModel
+import ru.practicum.android.diploma.presentation.FiltersViewModel
 import ru.practicum.android.diploma.presentation.IndustryViewModel
 import ru.practicum.android.diploma.presentation.RegionViewModel
 import ru.practicum.android.diploma.presentation.SearchViewModel
 import ru.practicum.android.diploma.presentation.VacancyDetailViewModel
-import ru.practicum.android.diploma.ui.FiltersViewModel
-import ru.practicum.android.diploma.ui.WorkLocationViewModel
+import ru.practicum.android.diploma.presentation.WorkLocationViewModel
 
 private val appScopeQualifier = named("applicationScope")
 

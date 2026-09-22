@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui
+package ru.practicum.android.diploma.presentation
 
 data class WorkLocationScreenState(
     val country: String? = null,

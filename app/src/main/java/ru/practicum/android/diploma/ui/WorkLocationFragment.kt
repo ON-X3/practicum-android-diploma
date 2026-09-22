@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentWorkLocationBinding
+import ru.practicum.android.diploma.presentation.WorkLocationScreenState
+import ru.practicum.android.diploma.presentation.WorkLocationViewModel
 
 class WorkLocationFragment : Fragment() {
 
