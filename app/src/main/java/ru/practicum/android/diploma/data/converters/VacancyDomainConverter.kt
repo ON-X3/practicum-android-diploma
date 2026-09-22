@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.data.converters
 
-import ru.practicum.android.diploma.data.dto.SalaryDto
+import ru.practicum.android.diploma.data.dto.SalaryDTO
 import ru.practicum.android.diploma.data.dto.VacancyCardDto
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.domain.models.VacanciesSearchResult
@@ -26,5 +26,5 @@ class VacancyDomainConverter {
         logo = logo,
     )
 
-    private fun SalaryDto.toDomain() = VacancySalary(from, to, currency)
+    private fun SalaryDTO.toDomain() = VacancySalary(from, to, currency)
 }

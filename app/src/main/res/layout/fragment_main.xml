@@ -62,7 +62,8 @@
         android:id="@+id/commonProgressBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="@dimen/progress_bar_size"
@@ -105,17 +106,18 @@
         android:id="@+id/placeholderLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height0dp"
+        android:layout_marginHorizontal="@dimen/margin16dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/margin16dp">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/placeHolderImage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:src="@drawable/il_search"
-            android:contentDescription="@null" />
+            android:adjustViewBounds="true"/>
 
         <TextView
             android:id="@+id/placeholderText"
@@ -123,10 +125,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textAlignment="center"
+            android:layout_marginHorizontal="30dp"
+            android:textAppearance="@style/TextAppearanceMedium22"
             android:textColor="@color/ypBlack"
             android:visibility="gone"
-            android:textAppearance="@style/TextAppearanceMedium22"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            tools:text="@string/nothing_found"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,12 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.VacancyFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin16dp"
+        android:layout_marginTop="@dimen/margin20dp"
+        android:src="@drawable/ic_arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:textAppearance="@style/TextAppearanceMedium22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin16dp"
+        android:text="@string/vacancy"
+        app:layout_constraintBottom_toBottomOf="@id/backButton"
+        app:layout_constraintStart_toEndOf="@id/backButton"
+        app:layout_constraintTop_toTopOf="@id/backButton" />
+
+    <ImageView
+        android:id="@+id/sharingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/large_padding"
+        android:src="@drawable/ic_sharing_24"
+        app:layout_constraintEnd_toStartOf="@id/favoriteButton"
+        app:layout_constraintTop_toTopOf="@id/favoriteButton" />
+
+    <ImageView
+        android:id="@+id/favoriteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin20dp"
+        android:layout_marginEnd="@dimen/margin20dp"
+        android:src="@drawable/ic_favorites_non_active_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/progressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin20dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backButton">
+
+        <ProgressBar
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue"
+
+            />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/basic_padding"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backButton">
+
+        <ImageView
+            android:id="@+id/placeholderImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
+        <TextView
+            android:id="@+id/placeholderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/server_error"
+            android:textAppearance="@style/TextAppearanceMedium22"
+            android:textColor="@color/ypBlack" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin36dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backButton">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/vacancyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin16dp"
+                android:layout_marginTop="@dimen/margin8dp"
+                android:fontFamily="@font/ys_display_bold"
+                android:textColor="@color/ypBlack"
+                android:textSize="@dimen/text32sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Android developer" />
+
+            <TextView
+                android:id="@+id/salary"
+                android:textAppearance="@style/TextAppearanceMedium22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/micro_padding"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vacancyName"
+                tools:text="от 100 000 ₽" />
+
+            <LinearLayout
+                android:id="@+id/employerCard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height80dp"
+                android:layout_marginHorizontal="@dimen/margin16dp"
+                android:layout_marginTop="@dimen/large_padding"
+                android:background="@drawable/rounded_light_grey_background"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/salary">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/logo"
+                    android:layout_width="@dimen/company_logo_size"
+                    android:layout_height="@dimen/company_logo_size"
+
+                    android:padding="@dimen/company_logo_stoke_width"
+                    android:scaleType="centerInside"
+                    app:shapeAppearanceOverlay="@style/logo_image"
+                    app:strokeColor="@color/lightGray"
+                    app:strokeWidth="@dimen/company_logo_stoke_width"
+                    tools:src="@drawable/logo_placeholder_32" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_padding"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/companyName"
+                        android:textAppearance="@style/TextAppearanceMedium22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/uniBlack"
+                        tools:text="Еда" />
+
+                    <TextView
+                        android:id="@+id/address"
+                        android:textAppearance="@style/TextAppearanceRegular16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/uniBlack"
+                        tools:text="Москва" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/requiredExperience"
+                android:textAppearance="@style/TextAppearanceMedium22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin16dp"
+                android:layout_marginTop="@dimen/large_padding"
+                android:text="@string/required_experience"
+                android:textSize="@dimen/text16Sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/employerCard" />
+
+            <TextView
+                android:id="@+id/experience"
+                android:textAppearance="@style/TextAppearanceRegular16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                android:layout_marginTop="@dimen/micro_padding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/requiredExperience"
+                tools:text="от 1 года до 3 лет" />
+
+            <TextView
+                android:id="@+id/employmentAndSchedule"
+                android:textAppearance="@style/TextAppearanceRegular16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/experience"
+                app:layout_goneMarginTop="@dimen/large_padding"
+                tools:text="Полная занятость, Удаленная работа" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin16dp"
+                android:layout_marginTop="@dimen/margin32dp"
+                android:layout_marginBottom="@dimen/small_padding"
+                android:textAppearance="@style/TextAppearanceRegular16"
+                android:textColor="@color/ypBlack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/employmentAndSchedule"
+                tools:text="Описание вакансии" />
+
+            <TextView
+                android:id="@+id/skillsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                android:layout_marginTop="@dimen/small_padding"
+                android:text="@string/key_skills"
+                android:textAppearance="@style/TextAppearanceMedium22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/skillsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/basic_padding"
+                android:layout_marginTop="@dimen/basic_padding"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/skillsHeader"
+                tools:itemCount="5"
+                tools:listitem="@layout/skill_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

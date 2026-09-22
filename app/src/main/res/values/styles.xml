@@ -42,6 +42,7 @@
         <item name="android:drawableTint">@color/uniBlack</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:inputType">text</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
     </style>
 
     <style name="topBar">
@@ -63,16 +64,27 @@
         <item name="contentInsetStartWithNavigation">@dimen/toolbar_text_padding_with_navigation</item>
         <item name="titleTextAppearance">@style/TextAppearanceMedium22</item>
     </style>
-    
+
     <style name="TextAppearanceMedium22" parent="TextAppearance.AppCompat">
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearanceMedium16" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="TextAppearanceRegular16" parent="TextAppearance.AppCompat">
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="TextAppearanceRegular12" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="logo_image">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/company_logo_corner_radius</item>
