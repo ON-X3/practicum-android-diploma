@@ -12,14 +12,16 @@ import ru.practicum.android.diploma.presentation.VacancyDetailViewModel
 import ru.practicum.android.diploma.ui.FiltersViewModel
 import ru.practicum.android.diploma.ui.WorkLocationViewModel
 
+private val appScopeQualifier = named("applicationScope")
+
 val viewModelModule = module {
     viewModel {
         SearchViewModel(get(), get())
     }
     viewModel {
-        RegionViewModel(get(), get(named("applicationScope")))
+        RegionViewModel(get(), get(appScopeQualifier))
     }
-    viewModel { CountryViewModel(filterInteractor = get(), get(named("applicationScope"))) }
+    viewModel { CountryViewModel(filterInteractor = get(), get(appScopeQualifier)) }
     viewModel { (vacancyId: String) ->
         VacancyDetailViewModel(vacancyId, get(), get(), get())
     }
@@ -27,12 +29,12 @@ val viewModelModule = module {
         FavoritesViewModel(get())
     }
     viewModel {
-        WorkLocationViewModel(get(), get(named("applicationScope")))
+        WorkLocationViewModel(get(), get(appScopeQualifier))
     }
     viewModel {
         IndustryViewModel(get())
     }
     viewModel {
-        FiltersViewModel(get(), get(named("applicationScope")))
+        FiltersViewModel(get(), get(appScopeQualifier))
     }
 }

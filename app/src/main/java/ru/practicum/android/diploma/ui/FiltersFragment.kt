@@ -41,8 +41,59 @@ class FiltersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.filtersStateLiveData.observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        setListeners()
+
+        val simpleTextWatcher = object : TextWatcher {
+            private var isUpdating = false
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                when {
+                    binding.salaryInputText.hasFocus() -> binding.salaryLabel.setTextColor(
+                        resources.getColor(R.color.blue)
+                    )
+
+                    s.isNullOrEmpty() -> binding.salaryLabel.setTextColor(resources.getColor(R.color.salaryLabelColor))
+                    else -> binding.salaryLabel.setTextColor(resources.getColor(R.color.uniBlack))
+                }
+                binding.clearSalary.isVisible = !s.isNullOrEmpty()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdating || s == null) return
+
+                val text = s.toString()
+
+                if (text.length > 1 && text.startsWith("0")) {
+                    isUpdating = true
+
+                    s.delete(0, 1)
+
+                    isUpdating = false
+                }
+                salaryRequest = s.toString()
+                val salarySum = salaryRequest.toIntOrNull()
+                viewModel.onSalaryChanged(salarySum)
+            }
+        }
+        binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
+
+        binding.clearSalary.setOnClickListener {
+            val inputMethodManager =
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(binding.salaryInputText.windowToken, 0)
+            binding.salaryInputText.setText(EMPTY_TEXT)
+            viewModel.clearSalary()
+        }
+    }
+
+    private fun setListeners() {
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         binding.filterArea.setOnClickListener {
@@ -53,9 +104,6 @@ class FiltersFragment : Fragment() {
             findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
         }
 
-        viewModel.filtersStateLiveData.observe(viewLifecycleOwner) {
-            render(it)
-        }
         binding.hideWithoutSalary.setOnClickListener {
             if (!hideWOSalary) {
                 hideWOSalary = true
@@ -76,53 +124,12 @@ class FiltersFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        binding.clearSalary.setOnClickListener {
-            val inputMethodManager =
-                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(binding.salaryInputText.windowToken, 0)
-            binding.salaryInputText.setText(EMPTY_TEXT)
-            viewModel.clearSalary()
-        }
-
         binding.clearArea.setOnClickListener {
             viewModel.clearArea()
         }
-
         binding.clearIndustry.setOnClickListener {
             viewModel.clearIndustry()
         }
-
-        val simpleTextWatcher = object : TextWatcher {
-            private var isUpdating = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                when {
-                    binding.salaryInputText.hasFocus() -> binding.salaryLabel.setTextColor(resources.getColor(R.color.blue))
-                    s.isNullOrEmpty() -> binding.salaryLabel.setTextColor(resources.getColor(R.color.salaryLabelColor))
-                    else -> binding.salaryLabel.setTextColor(resources.getColor(R.color.uniBlack))
-                }
-                binding.clearSalary.isVisible = !s.isNullOrEmpty()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if (isUpdating || s == null) return
-
-                val text = s.toString()
-
-                if (text.length > 1 && text.startsWith("0")) {
-                    isUpdating = true
-
-                    s.delete(0, 1)
-
-                    isUpdating = false
-                }
-                salaryRequest = s.toString().orEmpty()
-                val salarySum = salaryRequest.toIntOrNull()
-                viewModel.onSalaryChanged(salarySum)
-            }
-        }
-        binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
     }
 
     private fun updateCheckBoxIcon(setValue: Boolean) {
@@ -144,7 +151,11 @@ class FiltersFragment : Fragment() {
         renderIndustry(state.industry)
         renderSalary(state.salary)
         updateCheckBoxIcon(state.onlyWithSalary)
-        if (state.area != null || state.industry != null || state.salary != null || state.onlyWithSalary) {
+        val isFilterNotEmpty = state.area != null
+            || state.industry != null
+            || state.salary != null
+            || state.onlyWithSalary
+        if (isFilterNotEmpty) {
             binding.applyFilters.visibility = View.VISIBLE
             binding.dropFilters.visibility = View.VISIBLE
         } else {

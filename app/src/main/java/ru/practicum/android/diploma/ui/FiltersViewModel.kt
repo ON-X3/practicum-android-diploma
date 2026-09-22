@@ -19,10 +19,12 @@ class FiltersViewModel(
 ) : ViewModel() {
     private var oldFilterParameters: FilterParameters? = null
     private var shouldUpdateFilterParameters = false
-    private val updateSalaryDebouncer = Debouncer<Int?>(SALARY_UPDATING_DELAY, appScope) {salary -> updateSalary(salary)}
+    private val updateSalaryDebouncer = Debouncer<Int?>(
+        SALARY_UPDATING_DELAY,
+        appScope
+    ) { salary -> updateSalary(salary) }
     private val filtersLiveData = MutableLiveData<FiltersState>()
-    val filtersStateLiveData : LiveData<FiltersState> = filtersLiveData
-
+    val filtersStateLiveData: LiveData<FiltersState> = filtersLiveData
 
     init {
         viewModelScope.launch { oldFilterParameters = filtersInteractor.getFilterParameters().first() }
@@ -114,5 +116,3 @@ class FiltersViewModel(
         const val SALARY_UPDATING_DELAY = 2000L
     }
 }
-
-
