@@ -18,6 +18,14 @@
     <string name="no_internet">Нет интернета</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
+    <string name="filter_settings" translatable="false">Настройки фильтрации</string>
+    <string name="area_filter" translatable="false">Место работы</string>
+    <string name="industry_filter" translatable="false">Отрасль</string>
+    <string name="salary_tag" translatable="false">Ожидаемая зарплата</string>
+    <string name="salary_hint" translatable="false">Введите сумму</string>
+    <string name="hide_Wo_Salary" translatable="false">Не показывать без зарплаты</string>
+    <string name="apply_filters" translatable="false">Применить</string>
+    <string name="drop_filters" translatable="false">Сбросить</string>
     <string name="search_region_hint">Введите регион</string>
     <string name="region_selection">Выбор региона</string>
     <string name="regions_not_found">Такого региона нет</string>
