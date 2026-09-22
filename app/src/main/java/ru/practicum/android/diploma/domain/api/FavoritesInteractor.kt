@@ -8,7 +8,5 @@ import ru.practicum.android.diploma.domain.util.Resource
 interface FavoritesInteractor {
     suspend fun addToFavorite(vacancy: VacancyDetail)
     suspend fun deleteFromFavoriteById(id: String)
-    suspend fun isFavorite(id: String): Boolean
-    suspend fun getVacancyById(id: String): VacancyDetail?
     suspend fun getFavoriteList(): Flow<Resource<List<VacancyCard>>>
 }

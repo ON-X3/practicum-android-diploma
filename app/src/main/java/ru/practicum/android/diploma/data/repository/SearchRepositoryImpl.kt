@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.data.repository
 
 import ru.practicum.android.diploma.data.converters.VacancyDetailConverter
 import ru.practicum.android.diploma.data.converters.VacancyDomainConverter
+import ru.practicum.android.diploma.data.db.dao.VacancyDetailDao
 import ru.practicum.android.diploma.data.dto.VacancyDetailRequest
 import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
@@ -17,7 +18,8 @@ import ru.practicum.android.diploma.domain.util.Resource
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
     private val vacancyDomainConverter: VacancyDomainConverter,
-    private val vacancyDetailConverter: VacancyDetailConverter
+    private val vacancyDetailConverter: VacancyDetailConverter,
+    private val vacancyDetailDao: VacancyDetailDao
 ) : SearchRepository {
     override suspend fun searchVacancies(
         expression: String,
@@ -55,7 +57,7 @@ class SearchRepositoryImpl(
                 if (dto == null) {
                     Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
                 } else {
-                    Resource.Success(vacancyDetailConverter.toDomain(dto))
+                    Resource.Success(vacancyDetailConverter.toDomain(dto, vacancyDetailDao.isFavorite(dto.id)))
                 }
             }
             NetworkClient.NOT_FOUND -> Resource.Error(ErrorCode.NOT_FOUND)

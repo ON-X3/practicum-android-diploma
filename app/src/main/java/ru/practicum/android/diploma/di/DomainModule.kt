@@ -13,7 +13,7 @@ import ru.practicum.android.diploma.domain.impl.SharingInteractorImpl
 import ru.practicum.android.diploma.domain.impl.VacancyInteractorImpl
 
 val domainModule = module {
-    single<SearchInteractor> { SearchInteractorImpl(get()) }
+    single<SearchInteractor> { SearchInteractorImpl(get(), get()) }
     single<FilterInteractor> { FilterInteractorImpl(get()) }
     single<FavoritesInteractor> { FavoritesInteractorImpl(get()) }
     single<VacancyInteractor> { VacancyInteractorImpl(repository = get()) }

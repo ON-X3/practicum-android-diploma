@@ -13,15 +13,27 @@
     <string name="required_experience">Требуемый опыт</string>
     <string name="found_some_vacancies">Найдено %1$d вакансий</string>
     <string name="vacancies_not_found">Таких вакансий нет</string>
+    <string name="industry_choice">Выберите отрасль</string>
+    <string name="search_industry_choice">Введите отрасль</string>
     <string name="no_internet">Нет интернета</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
+    <string name="search_region_hint">Введите регион</string>
+    <string name="region_selection">Выбор региона</string>
+    <string name="regions_not_found">Такого региона нет</string>
+    <string name="regions_error">Не удалось получить\nсписок</string>
+    <string name="nothing_found_error">Не удалось получить\nсписок</string>
+    <string name="industry_not_found">Такой отрасли нет</string>
+    <string name="btn_choice">Выбрать</string>
     <string name="no_internet_toast_message">Проверьте подключение к интернету</string>
     <string name="error_toast_message">Произошла ошибка</string>
+    <string name="choosing_country">Выбор страны</string>
+    <string name="countries_error">Не удалось получить\nсписок стран</string>
     <string name="key_skills">Ключевые навыки</string>
     <string name="not_found_404_placeholder_text">Вакансия не найдена или удалена</string>
     <string name="work_location">Выбор места работы</string>
     <string name="country">Страна</string>
     <string name="region">Регион</string>
     <string name="select">Выбрать</string>
+    <string name="list_is_empty">Список пуст</string>
 </resources>

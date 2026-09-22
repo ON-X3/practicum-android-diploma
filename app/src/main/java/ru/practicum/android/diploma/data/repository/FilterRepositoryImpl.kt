@@ -10,13 +10,12 @@ import ru.practicum.android.diploma.data.dto.FilterAreasResponse
 import ru.practicum.android.diploma.data.dto.FilterIndustriesRequest
 import ru.practicum.android.diploma.data.dto.FilterIndustriesResponse
 import ru.practicum.android.diploma.data.dto.toDomainFilterArea
-import ru.practicum.android.diploma.data.dto.toDomainFilterIndustry
+import ru.practicum.android.diploma.data.dto.toDomainIndustry
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.storage.StorageClient
 import ru.practicum.android.diploma.domain.api.FilterRepository
 import ru.practicum.android.diploma.domain.models.FilterArea
 import ru.practicum.android.diploma.domain.models.FilterAreaDetails
-import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.allNull
@@ -158,10 +157,10 @@ class FilterRepositoryImpl(
         }
     }
 
-    override suspend fun getFilterIndustries(): Resource<List<FilterIndustry>> {
+    override suspend fun getFilterIndustries(): Resource<List<Industry>> {
         val response = networkClient.doRequest(FilterIndustriesRequest())
         return if (response.resultCode == NetworkClient.OK_CODE) {
-            Resource.Success((response as FilterIndustriesResponse).industries.map { it.toDomainFilterIndustry() })
+            Resource.Success((response as FilterIndustriesResponse).industries.map { it.toDomainIndustry() })
         } else {
             Resource.Error(ErrorCode.INTERNAL_SERVER_ERROR)
         }
