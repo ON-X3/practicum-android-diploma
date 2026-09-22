@@ -33,6 +33,6 @@ val viewModelModule = module {
         IndustryViewModel(get())
     }
     viewModel {
-        FiltersViewModel(get())
+        FiltersViewModel(get(), get(named("applicationScope")))
     }
 }

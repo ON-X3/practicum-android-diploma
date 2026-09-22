@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import ru.practicum.android.diploma.R
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
+import ru.practicum.android.diploma.domain.models.FilterAreaDetails
+import ru.practicum.android.diploma.domain.models.Industry
 
 class FiltersFragment : Fragment() {
     private var _binding: FragmentFiltersBinding? = null
@@ -62,39 +65,38 @@ class FiltersFragment : Fragment() {
             updateCheckBoxIcon(hideWOSalary)
         }
         binding.applyFilters.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_filtersFragment_to_mainFragment
-            )
+            viewModel.onApplyFiltersClick()
+            findNavController().popBackStack()
         }
 
         binding.dropFilters.setOnClickListener {
-            findNavController().navigateUp()
+            viewModel.onDropFiltersClick()
+            findNavController().popBackStack()
         }
 
         val simpleTextWatcher = object : TextWatcher {
+            private var isUpdating = false
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty()) {
-                    binding.salaryInputText.setOnFocusChangeListener { _, hasFocus ->
-                        var color = 0
-                        if (hasFocus) {
-                            color = ContextCompat.getColor(requireContext(), R.color.blue)
-                            binding.salaryLabel.setTextColor(color)
-                        }
-                    }
-                    binding.applyFilters.visibility = View.GONE
-                    binding.dropFilters.visibility = View.GONE
-                } else {
-                    binding.applyFilters.visibility = View.VISIBLE
-                    binding.dropFilters.visibility = View.VISIBLE
-                }
+                
             }
 
             override fun afterTextChanged(s: Editable?) {
+                if (isUpdating || s == null) return
+
+                val text = s.toString()
+
+                if (text.length > 1 && text.startsWith("0")) {
+                    isUpdating = true
+
+                    s.delete(0, 1)
+
+                    isUpdating = false
+                }
                 salaryRequest = s.toString().orEmpty()
                 val salarySum = salaryRequest.toIntOrNull()
-                viewModel.updateSalary(salarySum)
+                viewModel.onSalaryChanged(salarySum)
             }
         }
         binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
@@ -113,17 +115,49 @@ class FiltersFragment : Fragment() {
         )
     }
     private fun render(state: FiltersViewModel.FiltersState){
-        val area = state.area
-        val industry = state.industry
-
-        if (area != null ) {
-            val areaFilter = "${area.country}, ${area.region}"
-            binding.filterArea.setText(areaFilter)
-        }
-        if (industry != null ) {
-            binding.filterArea.setText(industry.industryName)
+        renderArea(state.area)
+        renderIndustry(state.industry)
+        renderSalary(state.salary)
+        updateCheckBoxIcon(state.onlyWithSalary)
+        if (state.area != null || state.industry != null || state.salary != null || state.onlyWithSalary == true) {
+            binding.applyFilters.visibility = View.VISIBLE
+            binding.dropFilters.visibility = View.VISIBLE
+        } else {
+            binding.applyFilters.visibility = View.GONE
+            binding.dropFilters.visibility = View.GONE
         }
     }
+
+    private fun renderArea(area: FilterAreaDetails?) {
+        if (area != null) {
+            binding.filterArea.text = buildString {
+                append(area.country?.countryName)
+                if (area.region != null) {
+                    append(", ${area.region.regionName}")
+                }
+            }
+        } else {
+            binding.filterArea.setText(R.string.area_filter)
+        }
+    }
+
+    private fun renderIndustry(industry: Industry?) {
+        if (industry == null) {
+            binding.filterIndustry.setText(R.string.industry_filter)
+        } else {
+            binding.filterIndustry.text = industry.industryName
+        }
+    }
+
+    private fun renderSalary(salary: Int?) {
+        if (salary == null) {
+            binding.salaryInputText.setText("")
+        } else {
+            binding.salaryInputText.setText(salary.toString())
+        }
+        binding.salaryInputText.setSelection(binding.salaryInputText.text.length)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
