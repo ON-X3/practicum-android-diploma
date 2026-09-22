@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui
+package ru.practicum.android.diploma.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +11,6 @@ import ru.practicum.android.diploma.domain.api.FilterInteractor
 import ru.practicum.android.diploma.domain.models.FilterAreaDetails
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
-import ru.practicum.android.diploma.util.Debouncer
 
 class FiltersViewModel(
     private val filtersInteractor: FilterInteractor,
@@ -19,10 +18,6 @@ class FiltersViewModel(
 ) : ViewModel() {
     private var oldFilterParameters: FilterParameters? = null
     private var shouldUpdateFilterParameters = false
-    private val updateSalaryDebouncer = Debouncer<Int?>(
-        SALARY_UPDATING_DELAY,
-        appScope
-    ) { salary -> updateSalary(salary) }
     private val filtersLiveData = MutableLiveData<FiltersState>()
     val filtersStateLiveData: LiveData<FiltersState> = filtersLiveData
 
@@ -53,7 +48,7 @@ class FiltersViewModel(
 
     fun onSalaryChanged(salary: Int?) {
         if (salary == filtersLiveData.value?.salary) return
-        updateSalaryDebouncer.invoke(salary)
+        viewModelScope.launch {filtersInteractor.updateSalary(salary)}
     }
 
     private fun updateSalary(salary: Int?) {
@@ -75,7 +70,6 @@ class FiltersViewModel(
 
     fun onDropFiltersClick() {
         shouldUpdateFilterParameters = true
-        updateSalaryDebouncer.cancel()
         appScope.launch { filtersInteractor.clearFilterParameters() }
     }
 
@@ -88,13 +82,11 @@ class FiltersViewModel(
     }
 
     fun clearSalary() {
-        updateSalaryDebouncer.cancel()
         viewModelScope.launch { filtersInteractor.updateSalary(null) }
     }
 
     override fun onCleared() {
         if (!shouldUpdateFilterParameters) {
-            updateSalaryDebouncer.cancel()
             appScope.launch {
                 filtersInteractor.updateArea(oldFilterParameters?.area)
                 filtersInteractor.updateIndustry(oldFilterParameters?.industry)
@@ -111,8 +103,4 @@ class FiltersViewModel(
         val salary: Int? = null,
         val onlyWithSalary: Boolean = false
     )
-
-    companion object {
-        const val SALARY_UPDATING_DELAY = 2000L
-    }
 }
