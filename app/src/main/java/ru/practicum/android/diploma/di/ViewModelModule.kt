@@ -18,6 +18,6 @@ val viewModelModule = module {
         FavoritesViewModel(get())
     }
     viewModel {
-        WorkLocationViewModel()
+        WorkLocationViewModel(get(), get())
     }
 }

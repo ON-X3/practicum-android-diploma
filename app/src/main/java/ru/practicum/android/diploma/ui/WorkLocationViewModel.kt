@@ -3,11 +3,30 @@ package ru.practicum.android.diploma.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.FilterInteractor
+import ru.practicum.android.diploma.domain.models.FilterAreaDetails
 
-class WorkLocationViewModel : ViewModel() {
+class WorkLocationViewModel(private val filterInteractor: FilterInteractor, private val appScope: CoroutineScope) :
+    ViewModel() {
 
+    private var oldArea: FilterAreaDetails? = null
+    private var shouldApplyNewArea: Boolean = false
     private val _state = MutableLiveData(WorkLocationScreenState())
     val state: LiveData<WorkLocationScreenState> = _state
+
+    init {
+        viewModelScope.launch {
+            oldArea = filterInteractor.getFilterParameters().first()?.area
+            filterInteractor.getFilterParameters().collect {
+                setCountry(it?.area?.country?.countryName)
+                setRegion(it?.area?.region?.regionName)
+            }
+        }
+    }
 
     fun setCountry(countryName: String?) {
         val currentState = _state.value ?: WorkLocationScreenState()
@@ -46,5 +65,13 @@ class WorkLocationViewModel : ViewModel() {
     }
 
     fun saveLocation() {
+        shouldApplyNewArea = true
+    }
+
+    override fun onCleared() {
+        if (!shouldApplyNewArea) {
+            appScope.launch { filterInteractor.updateArea(oldArea) }
+        }
+        super.onCleared()
     }
 }
