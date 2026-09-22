@@ -1,61 +1,115 @@
 package ru.practicum.android.diploma.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import ru.practicum.android.diploma.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 
-// Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FiltersFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FiltersFragment : Fragment() {
-    // Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentFiltersBinding? = null
+    private val binding get() = _binding!!
+    private var salaryRequest: String = EMPTY_TEXT
+    private var hideWOSalary: Boolean = false
+    private val viewModel: FiltersViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filters, container, false)
+        _binding = FragmentFiltersBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FiltersFragment.
-         */
-        // Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FiltersFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.filterArea.setOnClickListener {
+            findNavController().navigate(R.id.action_filtersFragment_to_workLocationFragment)
+        }
+
+        binding.filterIndustry.setOnClickListener {
+            findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
+        }
+        binding.hideWithoutSalary.setOnClickListener {
+            if (!hideWOSalary) {
+                hideWOSalary = true
+            } else {
+                hideWOSalary = false
+            }
+            updateCheckBoxIcon(hideWOSalary)
+        }
+        binding.applyFilters.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_filtersFragment_to_mainFragment
+            )
+        }
+
+        binding.dropFilters.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        val simpleTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty()) {
+                    binding.salaryInputText.setOnFocusChangeListener { _, hasFocus ->
+                        var color = 0
+                        if (hasFocus) {
+                            color = ContextCompat.getColor(requireContext(), R.color.blue)
+                            binding.salaryLabel.setTextColor(color)
+                        }
+                    }
+                    binding.applyFilters.visibility = View.GONE
+                    binding.dropFilters.visibility = View.GONE
+                } else {
+                    binding.applyFilters.visibility = View.VISIBLE
+                    binding.dropFilters.visibility = View.VISIBLE
                 }
             }
+
+            override fun afterTextChanged(s: Editable?) {
+                salaryRequest = s.toString()
+            }
+        }
+        binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
+    }
+    private fun updateCheckBoxIcon(setValue: Boolean) {
+        val checkBoxIcon = if (setValue) {
+            R.drawable.ic_check_box_on_24
+        } else {
+            R.drawable.ic_check_box_off_24
+        }
+        binding.hideWithoutSalary.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            0,
+            0,
+            checkBoxIcon,
+            0,
+        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+    companion object {
+        private const val EMPTY_TEXT = ""
     }
 }

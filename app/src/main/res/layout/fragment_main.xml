@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
+            android:textCursorDrawable="@drawable/cursor"
             android:minHeight="@dimen/height56dp"
             android:singleLine="true"
             android:textColor="@color/uniBlack" />
