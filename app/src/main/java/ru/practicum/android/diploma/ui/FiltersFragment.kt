@@ -1,61 +1,251 @@
 package ru.practicum.android.diploma.ui
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
+import ru.practicum.android.diploma.domain.models.FilterAreaDetails
+import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.presentation.FiltersViewModel
 
-// Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FiltersFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FiltersFragment : Fragment() {
-    // Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentFiltersBinding? = null
+    private val binding get() = _binding!!
+    private var salaryRequest: String = EMPTY_TEXT
+    private var hideWOSalary: Boolean = false
+    private val viewModel: FiltersViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filters, container, false)
+        _binding = FragmentFiltersBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.filtersStateLiveData.observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        setListeners()
+
+        val simpleTextWatcher = object : TextWatcher {
+            private var isUpdating = false
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                when {
+                    binding.salaryInputText.hasFocus() -> binding.salaryLabel.setTextColor(
+                        resources.getColor(R.color.blue)
+                    )
+
+                    s.isNullOrEmpty() -> binding.salaryLabel.setTextColor(resources.getColor(R.color.salaryLabelColor))
+                    else -> binding.salaryLabel.setTextColor(resources.getColor(R.color.uniBlack))
+                }
+                binding.clearSalary.isVisible = !s.isNullOrEmpty()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdating || s == null) return
+
+                val text = s.toString()
+
+                if (text.length > 1 && text.startsWith("0")) {
+                    isUpdating = true
+
+                    s.delete(0, 1)
+
+                    isUpdating = false
+                }
+                salaryRequest = s.toString()
+                val salarySum = salaryRequest.toIntOrNull()
+                viewModel.onSalaryChanged(salarySum)
+            }
+        }
+        binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
+
+        binding.clearSalary.setOnClickListener {
+            val inputMethodManager =
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(binding.salaryInputText.windowToken, 0)
+            binding.salaryInputText.setText(EMPTY_TEXT)
+            viewModel.clearSalary()
+        }
+    }
+
+    private fun setListeners() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.filterArea.setOnClickListener {
+            findNavController().navigate(R.id.action_filtersFragment_to_workLocationFragment)
+        }
+
+        binding.filterIndustry.setOnClickListener {
+            findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
+        }
+
+        binding.hideWithoutSalary.setOnClickListener {
+            if (!hideWOSalary) {
+                hideWOSalary = true
+                viewModel.updateWithSalary(hideWOSalary)
+            } else {
+                hideWOSalary = false
+                viewModel.updateWithSalary(hideWOSalary)
+            }
+            updateCheckBoxIcon(hideWOSalary)
+        }
+        binding.applyFilters.setOnClickListener {
+            viewModel.onApplyFiltersClick()
+            findNavController().popBackStack()
+        }
+
+        binding.dropFilters.setOnClickListener {
+            viewModel.onDropFiltersClick()
+            findNavController().popBackStack()
+        }
+
+        binding.clearArea.setOnClickListener {
+            viewModel.clearArea()
+        }
+        binding.clearIndustry.setOnClickListener {
+            viewModel.clearIndustry()
+        }
+    }
+
+    private fun updateCheckBoxIcon(setValue: Boolean) {
+        val checkBoxIcon = if (setValue) {
+            R.drawable.ic_check_box_on_24
+        } else {
+            R.drawable.ic_check_box_off_24
+        }
+        binding.hideWithoutSalary.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            0,
+            0,
+            checkBoxIcon,
+            0,
+        )
+    }
+
+    private fun render(state: FiltersViewModel.FiltersState) {
+        renderArea(state.area)
+        renderIndustry(state.industry)
+        renderSalary(state.salary)
+        updateCheckBoxIcon(state.onlyWithSalary)
+        val isFilterNotEmpty = state.area != null
+            || state.industry != null
+            || state.salary != null
+            || state.onlyWithSalary
+        if (isFilterNotEmpty) {
+            binding.applyFilters.visibility = View.VISIBLE
+            binding.dropFilters.visibility = View.VISIBLE
+        } else {
+            binding.applyFilters.visibility = View.GONE
+            binding.dropFilters.visibility = View.GONE
+        }
+    }
+
+    private fun renderArea(area: FilterAreaDetails?) {
+        if (area != null) {
+            binding.apply {
+                areaValue.text = buildString {
+                    append(area.country?.countryName)
+                    if (area.region != null) {
+                        append(", ${area.region.regionName}")
+                    }
+                }
+                areaLabel.setText(R.string.area_filter)
+                filterArea.text = EMPTY_TEXT
+                clearArea.isVisible = true
+                filterArea.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            }
+        } else {
+            binding.apply {
+                filterArea.setText(R.string.area_filter)
+                areaValue.text = EMPTY_TEXT
+                areaLabel.text = EMPTY_TEXT
+                clearArea.isVisible = false
+                filterArea.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_arrow_forward_24),
+                    null
+                )
+            }
+
+        }
+    }
+
+    private fun renderIndustry(industry: Industry?) {
+        if (industry == null) {
+            binding.apply {
+                filterIndustry.setText(R.string.industry_filter)
+                industryLabel.text = EMPTY_TEXT
+                industryValue.text = EMPTY_TEXT
+                clearIndustry.isVisible = false
+                filterIndustry.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_arrow_forward_24),
+                    null
+                )
+            }
+        } else {
+            binding.apply {
+                filterIndustry.text = EMPTY_TEXT
+                industryLabel.setText(R.string.industry_filter)
+                industryValue.text = industry.industryName
+                clearIndustry.isVisible = true
+                filterIndustry.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            }
+        }
+    }
+
+    private fun renderSalary(salary: Int?) {
+        if (salary == null) {
+            binding.salaryInputText.setText("")
+        } else {
+            binding.salaryInputText.setText(salary.toString())
+        }
+        binding.salaryInputText.setSelection(binding.salaryInputText.text.length)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FiltersFragment.
-         */
-        // Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FiltersFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        private const val EMPTY_TEXT = ""
     }
 }

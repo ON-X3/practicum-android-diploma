@@ -4,7 +4,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import retrofit2.HttpException
+import ru.practicum.android.diploma.data.dto.FilterAreasRequest
+import ru.practicum.android.diploma.data.dto.FilterAreasResponse
+import ru.practicum.android.diploma.data.dto.FilterIndustriesRequest
+import ru.practicum.android.diploma.data.dto.FilterIndustriesResponse
 import ru.practicum.android.diploma.data.dto.Response
+import ru.practicum.android.diploma.data.dto.VacancyDetailRequest
+import ru.practicum.android.diploma.data.dto.VacancyDetailResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 
 class RetrofitNetworkClient(
@@ -14,11 +20,23 @@ class RetrofitNetworkClient(
 
     override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode = NO_CONNECTION_ERROR_CODE }
+            return Response().apply { resultCode = NetworkClient.NO_CONNECTION_ERROR_CODE }
         }
         return when (dto) {
             is VacancySearchRequest -> doVacanciesRequest(dto)
-            else -> Response().apply { resultCode = BAD_REQUEST_ERROR_CODE }
+            is FilterAreasRequest -> doFilterAreasRequest()
+            is FilterIndustriesRequest -> doFilterIndustriesRequest()
+            is VacancyDetailRequest -> doVacancyDetailRequest(dto)
+            else -> Response().apply { resultCode = NetworkClient.BAD_REQUEST_ERROR_CODE }
+        }
+    }
+
+    private suspend fun doVacancyDetailRequest(request: VacancyDetailRequest): Response {
+        return try {
+            val vacancyDetail = searchApi.getVacancyDetails(request.vacancyId)
+            VacancyDetailResponse(vacancyDetail).apply { resultCode = NetworkClient.OK_CODE }
+        } catch (e: HttpException) {
+            return Response().apply { resultCode = e.code() }
         }
     }
 
@@ -32,7 +50,25 @@ class RetrofitNetworkClient(
                 salary = dto.salary,
                 onlyWithSalary = dto.onlyWithSalary,
             )
-            return resp.apply { resultCode = OK_CODE }
+            return resp.apply { resultCode = NetworkClient.OK_CODE }
+        } catch (e: HttpException) {
+            return Response().apply { resultCode = e.code() }
+        }
+    }
+
+    private suspend fun doFilterAreasRequest(): Response {
+        try {
+            val areas = searchApi.getFilterAreas()
+            return FilterAreasResponse(areas).apply { resultCode = NetworkClient.OK_CODE }
+        } catch (e: HttpException) {
+            return Response().apply { resultCode = e.code() }
+        }
+    }
+
+    private suspend fun doFilterIndustriesRequest(): Response {
+        try {
+            val industries = searchApi.getFilterIndustries()
+            return FilterIndustriesResponse(industries).apply { resultCode = NetworkClient.OK_CODE }
         } catch (e: HttpException) {
             return Response().apply { resultCode = e.code() }
         }
@@ -55,12 +91,6 @@ class RetrofitNetworkClient(
             }
         }
         return false
-    }
-
-    companion object {
-        const val NO_CONNECTION_ERROR_CODE = -1
-        const val BAD_REQUEST_ERROR_CODE = 400
-        const val OK_CODE = 200
     }
 
 }
