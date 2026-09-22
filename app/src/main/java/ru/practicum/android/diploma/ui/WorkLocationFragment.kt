@@ -36,13 +36,15 @@ class WorkLocationFragment : Fragment() {
     private fun initListeners() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+
         }
 
         binding.countryContainer.setOnClickListener {
-
+            findNavController().navigate(R.id.action_workLocationFragment_to_countryFragment)
         }
 
         binding.regionContainer.setOnClickListener {
+            findNavController().navigate(R.id.action_workLocationFragment_to_regionFragment)
         }
 
         binding.btnSelect.setOnClickListener {
