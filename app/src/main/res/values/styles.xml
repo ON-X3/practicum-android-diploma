@@ -90,25 +90,22 @@
 
     <style name="filterButton">
         <item name="android:paddingHorizontal">@dimen/margin16dp</item>
-        <item name="android:paddingVertical">@dimen/margin20dp</item>
-        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:paddingVertical">20.5dp</item>
+        <item name="android:textAppearance">@style/TextAppearanceRegular16</item>
         <item name="android:textColor">@color/gray</item>
-        <item name="android:textSize">@dimen/text19Sp</item>
     </style>
-    <style name="applyFiltersButton" parent="Widget.AppCompat.Button">
+    <style name="applyFiltersButton">
         <item name="android:background" type="drawable">@drawable/rounded_textview</item>
         <item name="android:textColor">@color/uniWhite</item>
         <item name="android:layout_gravity">center</item>>
         <item name="android:textAllCaps">false</item>>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textAppearance">@style/TextAppearanceMedium16</item>
     </style>
-    <style name="dropFiltersButton" parent="Widget.Material3.Button">
+    <style name="dropFiltersButton">
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="android:textColor">@color/red</item>
         <item name="android:layout_gravity">center</item>>
         <item name="android:textAllCaps">false</item>>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textAppearance">@style/TextAppearanceMedium16</item>
     </style>
 </resources>

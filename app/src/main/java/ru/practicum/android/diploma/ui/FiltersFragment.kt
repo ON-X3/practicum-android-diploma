@@ -1,17 +1,19 @@
 package ru.practicum.android.diploma.ui
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
-import ru.practicum.android.diploma.R
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.domain.models.FilterAreaDetails
 import ru.practicum.android.diploma.domain.models.Industry
@@ -74,12 +76,33 @@ class FiltersFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        binding.clearSalary.setOnClickListener {
+            val inputMethodManager =
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(binding.salaryInputText.windowToken, 0)
+            binding.salaryInputText.setText(EMPTY_TEXT)
+            viewModel.clearSalary()
+        }
+
+        binding.clearArea.setOnClickListener {
+            viewModel.clearArea()
+        }
+
+        binding.clearIndustry.setOnClickListener {
+            viewModel.clearIndustry()
+        }
+
         val simpleTextWatcher = object : TextWatcher {
             private var isUpdating = false
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
+                when {
+                    binding.salaryInputText.hasFocus() -> binding.salaryLabel.setTextColor(resources.getColor(R.color.blue))
+                    s.isNullOrEmpty() -> binding.salaryLabel.setTextColor(resources.getColor(R.color.salaryLabelColor))
+                    else -> binding.salaryLabel.setTextColor(resources.getColor(R.color.uniBlack))
+                }
+                binding.clearSalary.isVisible = !s.isNullOrEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -101,6 +124,7 @@ class FiltersFragment : Fragment() {
         }
         binding.salaryInputText.addTextChangedListener(simpleTextWatcher)
     }
+
     private fun updateCheckBoxIcon(setValue: Boolean) {
         val checkBoxIcon = if (setValue) {
             R.drawable.ic_check_box_on_24
@@ -114,12 +138,13 @@ class FiltersFragment : Fragment() {
             0,
         )
     }
-    private fun render(state: FiltersViewModel.FiltersState){
+
+    private fun render(state: FiltersViewModel.FiltersState) {
         renderArea(state.area)
         renderIndustry(state.industry)
         renderSalary(state.salary)
         updateCheckBoxIcon(state.onlyWithSalary)
-        if (state.area != null || state.industry != null || state.salary != null || state.onlyWithSalary == true) {
+        if (state.area != null || state.industry != null || state.salary != null || state.onlyWithSalary) {
             binding.applyFilters.visibility = View.VISIBLE
             binding.dropFilters.visibility = View.VISIBLE
         } else {
@@ -130,22 +155,67 @@ class FiltersFragment : Fragment() {
 
     private fun renderArea(area: FilterAreaDetails?) {
         if (area != null) {
-            binding.filterArea.text = buildString {
-                append(area.country?.countryName)
-                if (area.region != null) {
-                    append(", ${area.region.regionName}")
+            binding.apply {
+                areaValue.text = buildString {
+                    append(area.country?.countryName)
+                    if (area.region != null) {
+                        append(", ${area.region.regionName}")
+                    }
                 }
+                areaLabel.setText(R.string.area_filter)
+                filterArea.text = EMPTY_TEXT
+                clearArea.isVisible = true
+                filterArea.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    null,
+                    null
+                )
             }
         } else {
-            binding.filterArea.setText(R.string.area_filter)
+            binding.apply {
+                filterArea.setText(R.string.area_filter)
+                areaValue.text = EMPTY_TEXT
+                areaLabel.text = EMPTY_TEXT
+                clearArea.isVisible = false
+                filterArea.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_arrow_forward_24),
+                    null
+                )
+            }
+
         }
     }
 
     private fun renderIndustry(industry: Industry?) {
         if (industry == null) {
-            binding.filterIndustry.setText(R.string.industry_filter)
+            binding.apply {
+                filterIndustry.setText(R.string.industry_filter)
+                industryLabel.text = EMPTY_TEXT
+                industryValue.text = EMPTY_TEXT
+                clearIndustry.isVisible = false
+                filterIndustry.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_arrow_forward_24),
+                    null
+                )
+            }
         } else {
-            binding.filterIndustry.text = industry.industryName
+            binding.apply {
+                filterIndustry.text = EMPTY_TEXT
+                industryLabel.setText(R.string.industry_filter)
+                industryValue.text = industry.industryName
+                clearIndustry.isVisible = true
+                filterIndustry.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            }
         }
     }
 
@@ -162,6 +232,7 @@ class FiltersFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     companion object {
         private const val EMPTY_TEXT = ""
     }

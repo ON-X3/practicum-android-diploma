@@ -77,6 +77,19 @@ class FiltersViewModel(
         appScope.launch { filtersInteractor.clearFilterParameters() }
     }
 
+    fun clearArea() {
+        viewModelScope.launch { filtersInteractor.updateArea(null) }
+    }
+
+    fun clearIndustry() {
+        viewModelScope.launch { filtersInteractor.updateIndustry(null) }
+    }
+
+    fun clearSalary() {
+        updateSalaryDebouncer.cancel()
+        viewModelScope.launch { filtersInteractor.updateSalary(null) }
+    }
+
     override fun onCleared() {
         if (!shouldUpdateFilterParameters) {
             updateSalaryDebouncer.cancel()
