@@ -48,14 +48,7 @@ class FiltersViewModel(
 
     fun onSalaryChanged(salary: Int?) {
         if (salary == filtersLiveData.value?.salary) return
-        viewModelScope.launch {filtersInteractor.updateSalary(salary)}
-    }
-
-    private fun updateSalary(salary: Int?) {
-        if (salary == filtersLiveData.value!!.salary) return
-        viewModelScope.launch {
-            filtersInteractor.updateSalary(salary)
-        }
+        viewModelScope.launch { filtersInteractor.updateSalary(salary) }
     }
 
     fun updateWithSalary(onlyWithSalary: Boolean) {
