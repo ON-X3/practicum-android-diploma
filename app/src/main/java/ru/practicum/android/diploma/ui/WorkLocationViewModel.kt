@@ -13,15 +13,17 @@ import ru.practicum.android.diploma.domain.models.FilterAreaDetails
 class WorkLocationViewModel(private val filterInteractor: FilterInteractor, private val appScope: CoroutineScope) :
     ViewModel() {
 
-    private var oldArea: FilterAreaDetails? = null
+    private var oldLocation: FilterAreaDetails? = null
+    private var currentLocation: FilterAreaDetails? = null
     private var shouldApplyNewArea: Boolean = false
     private val _state = MutableLiveData(WorkLocationScreenState())
     val state: LiveData<WorkLocationScreenState> = _state
 
     init {
         viewModelScope.launch {
-            oldArea = filterInteractor.getFilterParameters().first()?.area
+            oldLocation = filterInteractor.getFilterParameters().first()?.area
             filterInteractor.getFilterParameters().collect {
+                currentLocation = it?.area
                 setCountry(it?.area?.country?.countryName)
                 setRegion(it?.area?.region?.regionName)
             }
@@ -62,6 +64,7 @@ class WorkLocationViewModel(private val filterInteractor: FilterInteractor, priv
             region = null,
             isSelectButtonVisible = !currentState.country.isNullOrBlank()
         )
+        viewModelScope.launch { filterInteractor.updateArea(currentLocation?.copy(region = null)) }
     }
 
     fun saveLocation() {
@@ -70,7 +73,7 @@ class WorkLocationViewModel(private val filterInteractor: FilterInteractor, priv
 
     override fun onCleared() {
         if (!shouldApplyNewArea) {
-            appScope.launch { filterInteractor.updateArea(oldArea) }
+            appScope.launch { filterInteractor.updateArea(oldLocation) }
         }
         super.onCleared()
     }
