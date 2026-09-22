@@ -47,6 +47,7 @@ class FiltersFragment : Fragment() {
         binding.filterIndustry.setOnClickListener {
             findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
         }
+
         binding.hideWithoutSalary.setOnClickListener {
             if (!hideWOSalary) {
                 hideWOSalary = true
