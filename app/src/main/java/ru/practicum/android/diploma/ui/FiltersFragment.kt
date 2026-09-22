@@ -48,7 +48,7 @@ class FiltersFragment : Fragment() {
             findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
         }
 
-        viewModel.filtersStateLiveData.observe(viewLifecycleOwner){
+        viewModel.filtersStateLiveData.observe(viewLifecycleOwner) {
             render(it)
         }
         binding.hideWithoutSalary.setOnClickListener {
@@ -72,7 +72,7 @@ class FiltersFragment : Fragment() {
         }
 
         val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
@@ -112,15 +112,15 @@ class FiltersFragment : Fragment() {
             0,
         )
     }
-    private fun render(state: FiltersViewModel.FiltersState){
+    private fun render(state: FiltersViewModel.FiltersState) {
         val area = state.area
         val industry = state.industry
 
-        if (area != null ) {
+        if (area != null) {
             val areaFilter = "${area.country}, ${area.region}"
             binding.filterArea.setText(areaFilter)
         }
-        if (industry != null ) {
+        if (industry != null) {
             binding.filterArea.setText(industry.industryName)
         }
     }
