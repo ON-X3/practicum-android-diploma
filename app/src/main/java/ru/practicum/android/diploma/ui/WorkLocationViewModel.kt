@@ -49,7 +49,6 @@ class WorkLocationViewModel(private val filterInteractor: FilterInteractor, priv
     }
 
     fun clearCountry() {
-
         val currentState = _state.value ?: WorkLocationScreenState()
         _state.value = currentState.copy(
             country = null,
