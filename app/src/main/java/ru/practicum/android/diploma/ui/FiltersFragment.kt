@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -47,7 +48,7 @@ class FiltersFragment : Fragment() {
         }
 
         setListeners()
-
+        backButtonPress()
         val simpleTextWatcher = object : TextWatcher {
             private var isUpdating = false
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -239,6 +240,16 @@ class FiltersFragment : Fragment() {
             binding.salaryInputText.setText(salary.toString())
         }
         binding.salaryInputText.setSelection(binding.salaryInputText.text.length)
+    }
+
+    private fun backButtonPress() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.onApplyFiltersClick()
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun onDestroyView() {
