@@ -24,7 +24,6 @@ class FiltersFragment : Fragment() {
     private var _binding: FragmentFiltersBinding? = null
     private val binding get() = _binding!!
     private var salaryRequest: String = EMPTY_TEXT
-    private var hideWOSalary: Boolean = false
     private val viewModel: FiltersViewModel by viewModel()
 
     override fun onCreateView(
@@ -108,14 +107,9 @@ class FiltersFragment : Fragment() {
         }
 
         binding.hideWithoutSalary.setOnClickListener {
-            if (!hideWOSalary) {
-                hideWOSalary = true
-                viewModel.updateWithSalary(hideWOSalary)
-            } else {
-                hideWOSalary = false
-                viewModel.updateWithSalary(hideWOSalary)
-            }
-            updateCheckBoxIcon(hideWOSalary)
+            val hideWOSalary = viewModel.filtersStateLiveData.value?.onlyWithSalary ?: false
+            viewModel.updateWithSalary(!hideWOSalary)
+
         }
         binding.applyFilters.setOnClickListener {
             viewModel.onApplyFiltersClick()
