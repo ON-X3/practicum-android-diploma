@@ -94,6 +94,7 @@ class FiltersFragment : Fragment() {
 
     private fun setListeners() {
         binding.toolbar.setNavigationOnClickListener {
+            viewModel.onApplyFiltersClick()
             findNavController().popBackStack()
         }
 
