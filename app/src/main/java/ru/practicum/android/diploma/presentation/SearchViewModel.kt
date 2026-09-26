@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.FilterInteractor
@@ -25,6 +26,7 @@ class SearchViewModel(
     private var currentPage: Int = 1
     private var maxPages: Int = 1
     private var lastSuccessAmountOfVacancies: Int = 0
+    private var searchJob: Job? = null
     private val debouncer = Debouncer<String>(
         delayMillis = SEARCH_DEBOUNCE_DELAY,
         coroutineScope = viewModelScope,
@@ -59,6 +61,7 @@ class SearchViewModel(
             return
         }
         currentPage = 1
+        searchJob?.cancel()
         debouncer.invoke(currentExpression)
     }
 
@@ -75,7 +78,8 @@ class SearchViewModel(
     fun searchWithoutDebounce(expression: String) {
         if (expression.isNotBlank()) {
             debouncer.cancel()
-            viewModelScope.launch { searchVacancies(expression) }
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch { searchVacancies(expression) }
         }
     }
 
