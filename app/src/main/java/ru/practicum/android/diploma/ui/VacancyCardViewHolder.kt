@@ -12,8 +12,18 @@ import ru.practicum.android.diploma.domain.models.VacancyCard
 import java.util.Currency
 import java.util.Locale
 
-class VacancyCardViewHolder(private val binding: VacancyCardItemBinding) :
+class VacancyCardViewHolder(
+    private val binding: VacancyCardItemBinding,
+    private val onClick: (Int) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root) {
+
+    init {
+        itemView.setOnClickListener {
+            val position = bindingAdapterPosition
+            onClick(position)
+        }
+    }
 
     fun bind(vacancy: VacancyCard) {
         binding.vacancyNameAndCity.text = vacancy.name
@@ -59,10 +69,10 @@ class VacancyCardViewHolder(private val binding: VacancyCardItemBinding) :
     }
 
     companion object {
-        fun from(parent: ViewGroup): VacancyCardViewHolder {
+        fun from(parent: ViewGroup, onClick: (Int) -> Unit): VacancyCardViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = VacancyCardItemBinding.inflate(inflater, parent, false)
-            return VacancyCardViewHolder(binding)
+            return VacancyCardViewHolder(binding, onClick)
         }
     }
 }
