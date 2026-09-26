@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.VacancyCardItemBinding
 import ru.practicum.android.diploma.domain.models.VacancyCard
+import ru.practicum.android.diploma.domain.models.VacancySalary
 import java.util.Currency
 import java.util.Locale
 
@@ -40,21 +41,7 @@ class VacancyCardViewHolder(
             }
         }
 
-        if (vacancy.salary?.from != null || vacancy.salary?.to != null) {
-            binding.salary.text = buildString {
-                vacancy.salary.from?.let {
-                    append("от ${String.format(Locale.US, "%,d", it).replace(',', ' ')} ")
-                }
-                vacancy.salary.to?.let {
-                    append("до ${String.format(Locale.US, "%,d", it).replace(',', ' ')} ")
-                }
-                vacancy.salary.currency?.let {
-                    append(Currency.getInstance(it).getSymbol(Locale.getDefault()))
-                }
-            }.trim()
-        } else {
-            binding.salary.text = itemView.context.resources.getString(R.string.no_salary_info)
-        }
+        bindSalary(vacancy.salary)
 
         Glide.with(itemView)
             .load(vacancy.logo)
@@ -66,6 +53,37 @@ class VacancyCardViewHolder(
 
     fun updateLoadingState(isLoadingVisible: Boolean) {
         binding.nextPageProgressBar.isVisible = isLoadingVisible
+    }
+
+    private fun bindSalary(salary: VacancySalary?) {
+        when {
+            salary?.from != null && salary.to != null -> {
+                binding.salary.text = itemView.resources.getString(
+                    R.string.salary_from_to,
+                    String.format(Locale.US, "%,d", salary.from).replace(',', ' '),
+                    String.format(Locale.US, "%,d", salary.to).replace(',', ' '),
+                    Currency.getInstance(salary.currency ?: "RUB").getSymbol(Locale.getDefault())
+                )
+            }
+
+            salary?.from != null -> {
+                binding.salary.text = itemView.resources.getString(
+                    R.string.salary_from,
+                    String.format(Locale.US, "%,d", salary.from).replace(',', ' '),
+                    Currency.getInstance(salary.currency ?: "RUB").getSymbol(Locale.getDefault())
+                )
+            }
+
+            salary?.to != null -> {
+                binding.salary.text = itemView.resources.getString(
+                    R.string.salary_to,
+                    String.format(Locale.US, "%,d", salary.to).replace(',', ' '),
+                    Currency.getInstance(salary.currency ?: "RUB").getSymbol(Locale.getDefault())
+                )
+            }
+
+            else -> binding.salary.text = itemView.context.resources.getString(R.string.no_salary_info)
+        }
     }
 
     companion object {
