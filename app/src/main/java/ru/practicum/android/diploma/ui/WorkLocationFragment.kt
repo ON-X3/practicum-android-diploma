@@ -50,7 +50,6 @@ class WorkLocationFragment : Fragment() {
         }
 
         binding.btnSelect.setOnClickListener {
-            viewModel.saveLocation()
             findNavController().popBackStack()
         }
     }

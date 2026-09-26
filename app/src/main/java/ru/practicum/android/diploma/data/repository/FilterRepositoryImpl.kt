@@ -29,85 +29,33 @@ class FilterRepositoryImpl(
 ) :
     FilterRepository {
     override suspend fun updateArea(area: FilterAreaDetails?) {
-        withContext(Dispatchers.IO) {
-            val currentFilter = storage.getFilterParameters().first()
-            when {
-                currentFilter == null && area == null -> {}
-                currentFilter == null && area != null -> storage.saveFilterParameters(FilterParameters(area = area))
-                currentFilter != null -> {
-                    val newParams = currentFilter.copy(area = area)
-                    if (newParams.allNull()) {
-                        storage.clearFilterParameters()
-                    } else {
-                        storage.saveFilterParameters(newParams)
-                    }
-                }
-            }
-
-        }
+        updateFilter { it.copy(area = area) }
     }
 
     override suspend fun updateIndustry(industry: Industry?) {
-        withContext(Dispatchers.IO) {
-            val currentFilter = storage.getFilterParameters().first()
-            when {
-                currentFilter == null && industry == null -> {}
-                currentFilter == null && industry != null -> storage.saveFilterParameters(
-                    FilterParameters(industry = industry)
-                )
-
-                currentFilter != null -> {
-                    val newParams = currentFilter.copy(industry = industry)
-                    if (newParams.allNull()) {
-                        storage.clearFilterParameters()
-                    } else {
-                        storage.saveFilterParameters(newParams)
-                    }
-                }
-            }
-        }
+        updateFilter { it.copy(industry = industry) }
     }
 
     override suspend fun updateSalary(salary: Int?) {
-        withContext(Dispatchers.IO) {
-            val currentFilter = storage.getFilterParameters().first()
-            when {
-                currentFilter == null && salary == null -> {}
-                currentFilter == null && salary != null -> storage.saveFilterParameters(
-                    FilterParameters(salary = salary)
-                )
-
-                currentFilter != null -> {
-                    val newParams = currentFilter.copy(salary = salary)
-                    if (newParams.allNull()) {
-                        storage.clearFilterParameters()
-                    } else {
-                        storage.saveFilterParameters(newParams)
-                    }
-                }
-            }
-        }
+        updateFilter { it.copy(salary = salary) }
     }
 
     override suspend fun updateOnlyWithSalary(onlyWithSalary: Boolean) {
-        withContext(Dispatchers.IO) {
-            val currentFilter = storage.getFilterParameters().first()
-            when {
-                currentFilter == null && !onlyWithSalary -> {}
-                currentFilter == null && onlyWithSalary -> storage.saveFilterParameters(
-                    FilterParameters(onlyWithSalary = true)
-                )
+        updateFilter { it.copy(onlyWithSalary = onlyWithSalary) }
+    }
 
-                currentFilter != null -> {
-                    val newParams = currentFilter.copy(onlyWithSalary = onlyWithSalary)
-                    if (newParams.allNull()) {
-                        storage.clearFilterParameters()
-                    } else {
-                        storage.saveFilterParameters(newParams)
-                    }
-                }
+    private suspend fun updateFilter(transform: (FilterParameters) -> FilterParameters) {
+        withContext(Dispatchers.IO) {
+            val currentFilter = storage.getFilterParameters().first() ?: FilterParameters()
+            val updatedFilter = transform(currentFilter)
+
+            if (updatedFilter.allNull()) {
+                storage.clearFilterParameters()
+            } else {
+                storage.saveFilterParameters(updatedFilter)
             }
         }
+
     }
 
     override suspend fun clearFilterParameters() {

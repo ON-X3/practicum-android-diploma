@@ -114,10 +114,7 @@ class IndustryFragment : Fragment() {
 
     private fun setupButton() = with(binding) {
         btnChoice.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                val saved = viewModel.applySelection()
-                if (saved) findNavController().navigateUp()
-            }
+            findNavController().navigateUp()
         }
     }
 
@@ -149,6 +146,7 @@ class IndustryFragment : Fragment() {
                 adapter.setSelected(viewModel.selectedId)
                 updateButtonVisibility()
             }
+
             IndustryState.Empty -> notFoundErrorLinear.isVisible = true
             IndustryState.Error -> serverErrorLinear.isVisible = true
         }

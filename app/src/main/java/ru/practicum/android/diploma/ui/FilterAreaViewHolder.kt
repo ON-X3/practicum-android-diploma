@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.FilterAreaItemBinding
+import ru.practicum.android.diploma.domain.models.RegionArea
 
 class FilterAreaViewHolder(private val binding: FilterAreaItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(name: String) {
-        binding.name.text = name
+    fun bind(area: RegionArea) {
+        binding.name.text = area.regionName
     }
 
     companion object {

@@ -2,11 +2,12 @@ package ru.practicum.android.diploma.ui
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.practicum.android.diploma.domain.models.RegionArea
 
 class FilterAreaAdapter(private val clickListener: FilterAreaClickListener) :
     RecyclerView.Adapter<FilterAreaViewHolder>() {
 
-    private val areas: MutableList<String> = mutableListOf()
+    private val areas: MutableList<RegionArea> = mutableListOf()
 
     override fun onCreateViewHolder(
         p0: ViewGroup,
@@ -22,7 +23,7 @@ class FilterAreaAdapter(private val clickListener: FilterAreaClickListener) :
         return areas.size
     }
 
-    fun addAreas(newAreas: List<String>) {
+    fun addAreas(newAreas: List<RegionArea>) {
         areas.clear()
         areas.addAll(newAreas)
         notifyDataSetChanged()
@@ -33,7 +34,7 @@ class FilterAreaAdapter(private val clickListener: FilterAreaClickListener) :
     }
 
     fun interface FilterAreaClickListener {
-        fun onFilterAreaClick(name: String)
+        fun onFilterAreaClick(area: RegionArea)
 
     }
 }

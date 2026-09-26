@@ -163,20 +163,33 @@ class VacancyFragment : Fragment() {
     }
 
     private fun bindSalary(salary: VacancySalary?) {
-        if (salary?.from != null || salary?.to != null) {
-            binding.salary.text = buildString {
-                salary.from?.let {
-                    append("от ${String.format(Locale.US, "%,d", it).replace(',', ' ')} ")
-                }
-                salary.to?.let {
-                    append("до ${String.format(Locale.US, "%,d", it).replace(',', ' ')} ")
-                }
-                salary.currency?.let {
-                    append(Currency.getInstance(it).getSymbol(Locale.getDefault()))
-                }
-            }.trim()
-        } else {
-            binding.salary.setText(R.string.no_salary_info)
+        when {
+            salary?.from != null && salary.to != null -> {
+                binding.salary.text = resources.getString(
+                    R.string.salary_from_to,
+                    String.format(Locale.US, "%,d", salary.from).replace(',', ' '),
+                    String.format(Locale.US, "%,d", salary.to).replace(',', ' '),
+                    Currency.getInstance(salary.currency ?: "RUB").getSymbol(Locale.getDefault())
+                )
+            }
+
+            salary?.from != null -> {
+                binding.salary.text = resources.getString(
+                    R.string.salary_from,
+                    String.format(Locale.US, "%,d", salary.from).replace(',', ' '),
+                    Currency.getInstance(salary.currency ?: "RUB").getSymbol(Locale.getDefault())
+                )
+            }
+
+            salary?.to != null -> {
+                binding.salary.text = resources.getString(
+                    R.string.salary_to,
+                    String.format(Locale.US, "%,d", salary.to).replace(',', ' '),
+                    Currency.getInstance(salary.currency ?: "RUB").getSymbol(Locale.getDefault())
+                )
+            }
+
+            else -> binding.salary.text = resources.getString(R.string.no_salary_info)
         }
     }
 

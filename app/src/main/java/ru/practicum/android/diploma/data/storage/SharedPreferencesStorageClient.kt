@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import java.lang.reflect.Type
 
-class SharedPreferences(context: Context, private val gson: Gson, private val typeOfData: Type) :
+class SharedPreferencesStorageClient(context: Context, private val gson: Gson, private val typeOfData: Type) :
     StorageClient {
 
     private val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)

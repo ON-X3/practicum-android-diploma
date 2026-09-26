@@ -11,14 +11,13 @@ class VacancyCardAdapter(val clickListener: VacancyCardClickListener) :
     private var isLoadingVisible: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyCardViewHolder =
-        VacancyCardViewHolder.from(parent)
+        VacancyCardViewHolder.from(parent) { position ->
+            clickListener.onVacancyCardClick(vacancies[position])
+        }
 
     override fun onBindViewHolder(holder: VacancyCardViewHolder, position: Int) {
         holder.bind(vacancies[position])
         holder.updateLoadingState(position == vacancies.lastIndex && hasNextPage && isLoadingVisible)
-        holder.itemView.setOnClickListener {
-            clickListener.onVacancyCardClick(vacancies[position])
-        }
     }
 
     override fun getItemCount() = vacancies.size
