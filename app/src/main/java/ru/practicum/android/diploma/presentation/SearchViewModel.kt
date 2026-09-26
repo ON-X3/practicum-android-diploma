@@ -34,8 +34,8 @@ class SearchViewModel(
     private val searchStateUiLiveData = MutableLiveData<SearchStateUi>(SearchStateUi.Default)
     fun observeSearchStateUi(): LiveData<SearchStateUi> = searchStateUiLiveData
 
-    private val isFilterActiveAndChanged = MutableLiveData(Pair(false, false))
-    fun observeIsFilterActiveAndChanged(): LiveData<Pair<Boolean, Boolean>> = isFilterActiveAndChanged
+    private val isFilterActive = MutableLiveData(false)
+    fun observeIsFilterActive(): LiveData<Boolean> = isFilterActive
 
     private val errorToastLiveData = SingleLiveEvent<ErrorCode>()
     fun errorToast(): LiveData<ErrorCode> = errorToastLiveData
@@ -43,16 +43,8 @@ class SearchViewModel(
     init {
         viewModelScope.launch {
             filterInteractor.getFilterParameters().collect {
-                val isFilterChanged = it != currentFilter
-                if (isFilterChanged) {
-                    currentPage = 1
-                    vacanciesList.clear()
-                }
                 currentFilter = it
-                isFilterActiveAndChanged.value = Pair(currentFilter != null, isFilterChanged)
-                if (currentExpression.isNotEmpty()) {
-                    searchWithoutDebounce(currentExpression)
-                }
+                isFilterActive.value = currentFilter != null
             }
         }
     }
@@ -84,6 +76,12 @@ class SearchViewModel(
         if (expression.isNotBlank()) {
             debouncer.cancel()
             viewModelScope.launch { searchVacancies(expression) }
+        }
+    }
+
+    fun onFilterUpdated() {
+        if (currentExpression.isNotBlank()) {
+            searchWithoutDebounce(currentExpression)
         }
     }
 
