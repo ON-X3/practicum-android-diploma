@@ -22,7 +22,7 @@ import ru.practicum.android.diploma.data.repository.FavoritesRepositoryImpl
 import ru.practicum.android.diploma.data.repository.FilterRepositoryImpl
 import ru.practicum.android.diploma.data.repository.SearchRepositoryImpl
 import ru.practicum.android.diploma.data.repository.SharingRepositoryImpl
-import ru.practicum.android.diploma.data.storage.SharedPreferences
+import ru.practicum.android.diploma.data.storage.SharedPreferencesStorageClient
 import ru.practicum.android.diploma.data.storage.StorageClient
 import ru.practicum.android.diploma.domain.api.FavoritesRepository
 import ru.practicum.android.diploma.domain.api.FilterRepository
@@ -60,7 +60,7 @@ val dataModule = module {
     single { VacancyDetailConverter() }
     single<SearchRepository> { SearchRepositoryImpl(get(), get(), get(), get()) }
     single<StorageClient> {
-        SharedPreferences(
+        SharedPreferencesStorageClient(
             get(),
             get(),
             object : TypeToken<FilterParameters>() {}.type
