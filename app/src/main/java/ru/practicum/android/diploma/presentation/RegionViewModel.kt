@@ -72,7 +72,7 @@ class RegionViewModel(
             _state.value = RegionState.Empty
         } else {
             _state.value = RegionState.Content(filteredRegions.map {
-                it.name
+                RegionArea(it.id, it.name)
             })
         }
 
@@ -86,8 +86,8 @@ class RegionViewModel(
         filterDebouncer.invoke(Unit)
     }
 
-    fun onAreaClick(name: String) {
-        val selectedArea = filteredRegions.find { it.name == name }!!
+    fun onAreaClick(area: RegionArea) {
+        val selectedArea = filteredRegions.find { it.id == area.regionId }!!
         val country = findCountryOf(selectedArea)
         appScope.launch {
             filterInteractor.updateArea(
@@ -100,13 +100,11 @@ class RegionViewModel(
     }
 
     fun findCountryOf(region: FilterArea): FilterArea {
-        var country: FilterArea?
+        var country: FilterArea? = null
         var currentIterationRegion = region
-        while (true) {
+        while (country == null) {
             country = countries.find { it.id == currentIterationRegion.parentId }
-            if (country != null) {
-                break
-            } else {
+            if (country == null) {
                 currentIterationRegion = regions.find { it.id == currentIterationRegion.parentId }!!
             }
         }
