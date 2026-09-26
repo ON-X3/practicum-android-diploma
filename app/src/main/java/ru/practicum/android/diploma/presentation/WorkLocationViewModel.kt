@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.FilterInteractor
 import ru.practicum.android.diploma.domain.models.FilterAreaDetails
 
-class WorkLocationViewModel(private val filterInteractor: FilterInteractor, private val appScope: CoroutineScope) :
+class WorkLocationViewModel(private val filterInteractor: FilterInteractor) :
     ViewModel() {
 
     private var currentLocation: FilterAreaDetails? = null

@@ -29,7 +29,7 @@ val viewModelModule = module {
         FavoritesViewModel(get())
     }
     viewModel {
-        WorkLocationViewModel(get(), get(appScopeQualifier))
+        WorkLocationViewModel(get())
     }
     viewModel {
         IndustryViewModel(get())
