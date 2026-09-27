@@ -48,6 +48,9 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        checkFilterChanges()
+
         val inputMethodManager =
             requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
@@ -105,13 +108,23 @@ class MainFragment : Fragment() {
         super.onDestroyView()
     }
 
+    private fun checkFilterChanges() {
+        val shouldUpdateResults = findNavController().currentBackStackEntry
+            ?.savedStateHandle?.get<Boolean>(SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY)
+        if (shouldUpdateResults == true) {
+            viewModel.onFilterUpdated()
+            findNavController().currentBackStackEntry
+                ?.savedStateHandle?.remove<Boolean>(SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY)
+        }
+    }
+
     private fun setupObservers() {
         viewModel.observeSearchStateUi().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        viewModel.observeIsFilterActiveAndChanged().observe(viewLifecycleOwner) {
-            renderFilter(it.first, it.second)
+        viewModel.observeIsFilterActive().observe(viewLifecycleOwner) {
+            renderFilter(it)
         }
 
         viewModel.errorToast().observe(viewLifecycleOwner) {
@@ -163,10 +176,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun renderFilter(isActive: Boolean, isChanged: Boolean) {
-        if (isChanged) {
-            binding.vacanciesList.scrollToPosition(0)
-        }
+    private fun renderFilter(isActive: Boolean) {
         if (isActive) {
             binding.addFilter.apply {
                 imageTintList = ColorStateList.valueOf(requireContext().getColor(R.color.uniWhite))
@@ -301,5 +311,7 @@ class MainFragment : Fragment() {
     companion object {
         private const val SEARCH_KEY = "search_key"
         private const val EMPTY_TEXT = ""
+
+        const val SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY = "should_update_results"
     }
 }

@@ -44,4 +44,7 @@
     <string name="region">Регион</string>
     <string name="select">Выбрать</string>
     <string name="list_is_empty">Список пуст</string>
+    <string name="salary_from">от %1$s %2$s</string>
+    <string name="salary_to">до %1$s %2$s</string>
+    <string name="salary_from_to">от %1$s до %2$s %3$s</string>
 </resources>

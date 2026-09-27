@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
+import ru.practicum.android.diploma.domain.models.RegionArea
 import ru.practicum.android.diploma.presentation.RegionState
 import ru.practicum.android.diploma.presentation.RegionViewModel
 
@@ -37,8 +38,8 @@ class RegionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _adapter = FilterAreaAdapter { name ->
-            onAreaClick(name)
+        _adapter = FilterAreaAdapter { area ->
+            onAreaClick(area)
         }
         binding.areasList.adapter = adapter
 
@@ -95,7 +96,7 @@ class RegionFragment : Fragment() {
 
     }
 
-    private fun showContent(regions: List<String>) {
+    private fun showContent(regions: List<RegionArea>) {
         adapter.addAreas(regions)
         binding.apply {
             placeholder.isVisible = false
@@ -134,8 +135,8 @@ class RegionFragment : Fragment() {
         }
     }
 
-    private fun onAreaClick(name: String) {
-        viewModel.onAreaClick(name)
+    private fun onAreaClick(area: RegionArea) {
+        viewModel.onAreaClick(area)
         findNavController().popBackStack()
     }
 

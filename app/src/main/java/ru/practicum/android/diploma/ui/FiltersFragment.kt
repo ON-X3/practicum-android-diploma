@@ -113,12 +113,25 @@ class FiltersFragment : Fragment() {
         }
         binding.applyFilters.setOnClickListener {
             viewModel.onApplyFiltersClick()
-            findNavController().popBackStack()
+
+            findNavController().apply {
+                previousBackStackEntry?.savedStateHandle?.set(
+                    MainFragment.SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY,
+                    true
+                )
+                popBackStack()
+            }
         }
 
         binding.dropFilters.setOnClickListener {
             viewModel.onDropFiltersClick()
-            findNavController().popBackStack()
+            findNavController().apply {
+                previousBackStackEntry?.savedStateHandle?.set(
+                    MainFragment.SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY,
+                    true
+                )
+                popBackStack()
+            }
         }
 
         binding.clearArea.setOnClickListener {

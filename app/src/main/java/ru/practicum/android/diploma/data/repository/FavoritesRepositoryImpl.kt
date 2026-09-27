@@ -44,9 +44,9 @@ class FavoritesRepositoryImpl(
         vacancyDetailDao.getVacancyList().map { entities ->
             Resource.Success(entities.map { entity ->
                 vacancyCardConverter.toVacancyCard(entity)
-            })
+            }) as Resource<List<VacancyCard>>
         }
             .catch {
-                Resource.Error<Resource<List<VacancyCard>>>(ErrorCode.LOCAL_DB_ERROR)
+                emit(Resource.Error(ErrorCode.LOCAL_DB_ERROR))
             }
 }
