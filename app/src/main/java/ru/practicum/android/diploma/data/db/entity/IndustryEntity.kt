@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity("industries")
 data class IndustryEntity(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     val name: String
 )

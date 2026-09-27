@@ -14,6 +14,6 @@
 
     <color name="uniBlack">#1A1B22</color>
     <color name="uniWhite">#FDFDFD</color>
-
+    <color name="salaryLabelColor">@color/gray</color>
 
 </resources>

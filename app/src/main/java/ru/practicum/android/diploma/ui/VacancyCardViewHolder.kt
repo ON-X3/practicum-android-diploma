@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.practicum.android.diploma.R
@@ -51,6 +52,10 @@ class VacancyCardViewHolder(private val binding: VacancyCardItemBinding) :
             .error(R.drawable.logo_placeholder_32)
             .centerInside()
             .into(binding.logo)
+    }
+
+    fun updateLoadingState(isLoadingVisible: Boolean) {
+        binding.nextPageProgressBar.isVisible = isLoadingVisible
     }
 
     companion object {

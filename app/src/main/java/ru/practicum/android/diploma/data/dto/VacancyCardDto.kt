@@ -12,12 +12,7 @@ data class VacancyCardDto(
     @SerializedName("city")
     val city: String?,
     @SerializedName("salary")
-    val salary: SalaryDto?,
+    val salary: SalaryDTO?,
     @SerializedName("logo")
     val logo: String?
-)
-data class SalaryDto(
-    val from: Int?,
-    val to: Int?,
-    val currency: String?
 )

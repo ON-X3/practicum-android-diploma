@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 @Entity("area_entity")
 data class AreaEntity(
     @PrimaryKey
-    val id: String,
-    val parentId: String?,
+    val id: Int,
+    val parentId: Int?,
     val name: String,
     val areas: String?
 )

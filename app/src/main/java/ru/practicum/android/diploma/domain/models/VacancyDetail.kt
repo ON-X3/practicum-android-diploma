@@ -6,16 +6,16 @@ data class VacancyDetail(
     val descriptionHtml: String,
     val salary: VacancySalary?,
     val address: String,
-    val experience: String,
-    val schedule: String,
-    val employment: String,
+    val experience: String?,
+    val schedule: String?,
+    val employment: String?,
     val employer: Employer,
     val areaName: String,
+    val industryName: String,
     val skills: List<String>,
-    val sharingUrl: String,
+    val url: String,
     val isFavorite: Boolean
 )
-
 data class Employer(
     val name: String,
     val logo: String
