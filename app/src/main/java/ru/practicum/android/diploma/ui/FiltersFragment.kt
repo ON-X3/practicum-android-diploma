@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -23,7 +24,6 @@ class FiltersFragment : Fragment() {
     private var _binding: FragmentFiltersBinding? = null
     private val binding get() = _binding!!
     private var salaryRequest: String = EMPTY_TEXT
-    private var hideWOSalary: Boolean = false
     private val viewModel: FiltersViewModel by viewModel()
 
     override fun onCreateView(
@@ -47,7 +47,7 @@ class FiltersFragment : Fragment() {
         }
 
         setListeners()
-
+        backButtonPress()
         val simpleTextWatcher = object : TextWatcher {
             private var isUpdating = false
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -94,6 +94,7 @@ class FiltersFragment : Fragment() {
 
     private fun setListeners() {
         binding.toolbar.setNavigationOnClickListener {
+            viewModel.onApplyFiltersClick()
             findNavController().popBackStack()
         }
 
@@ -106,23 +107,31 @@ class FiltersFragment : Fragment() {
         }
 
         binding.hideWithoutSalary.setOnClickListener {
-            if (!hideWOSalary) {
-                hideWOSalary = true
-                viewModel.updateWithSalary(hideWOSalary)
-            } else {
-                hideWOSalary = false
-                viewModel.updateWithSalary(hideWOSalary)
-            }
-            updateCheckBoxIcon(hideWOSalary)
+            val hideWOSalary = viewModel.filtersStateLiveData.value?.onlyWithSalary ?: false
+            viewModel.updateWithSalary(!hideWOSalary)
+
         }
         binding.applyFilters.setOnClickListener {
             viewModel.onApplyFiltersClick()
-            findNavController().popBackStack()
+
+            findNavController().apply {
+                previousBackStackEntry?.savedStateHandle?.set(
+                    MainFragment.SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY,
+                    true
+                )
+                popBackStack()
+            }
         }
 
         binding.dropFilters.setOnClickListener {
             viewModel.onDropFiltersClick()
-            findNavController().popBackStack()
+            findNavController().apply {
+                previousBackStackEntry?.savedStateHandle?.set(
+                    MainFragment.SHOULD_UPDATE_RESULTS_WITH_NEW_FILTER_KEY,
+                    true
+                )
+                popBackStack()
+            }
         }
 
         binding.clearArea.setOnClickListener {
@@ -238,6 +247,16 @@ class FiltersFragment : Fragment() {
             binding.salaryInputText.setText(salary.toString())
         }
         binding.salaryInputText.setSelection(binding.salaryInputText.text.length)
+    }
+
+    private fun backButtonPress() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.onApplyFiltersClick()
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun onDestroyView() {

@@ -80,12 +80,7 @@ class IndustryViewModel(
 
     fun onIndustrySelected(industry: Industry) {
         selectedIndustryId = industry.industryId
-    }
-
-    suspend fun applySelection(): Boolean {
-        val industry = allIndustries.firstOrNull { it.industryId == selectedIndustryId } ?: return false
-        interactor.updateIndustry(industry)
-        return true
+        viewModelScope.launch { interactor.updateIndustry(industry) }
     }
 
     companion object {
